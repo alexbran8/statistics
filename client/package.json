@@ -117,6 +117,7 @@
     "styled-components": "^5.3.0",
     "uuid": "^8.3.2",
     "webpack-manifest-plugin": "^4.0.2",
-    "webpack-node-externals": "^3.0.0"
+    "webpack-node-externals": "^3.0.0",
+    "xlsx": "^0.17.1"
   }
 }

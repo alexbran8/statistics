@@ -44,8 +44,8 @@ export const SidebarData = [
     ],
   },
   {
-    title: "Services",
-    path: "/services",
+    title: "Incoherence Reporting",
+    path: "/incoherence_reporting",
     // icon: <IoIcons.IoIosPaper />,
     // iconClosed: <RiIcons.RiArrowDownSFill />,
     // iconOpened: <RiIcons.RiArrowUpSFill />,
