@@ -19,18 +19,6 @@ const IncoherenceReporting = () => {
   const sendData = (data) => {
     var that = this;
     setFileData(data)
-    // axios.post(config.baseURL + config.baseLOCATION + '/dailyTasks', {
-    //   data: data
-    // })
-    //   .then(function (response) {
-    //     // alert(response.data.message + ' => imported: ' + response.data.imported + '; existing: ' + response.data.existing );
-    //     console.log(response.data)
-    //     that.setState({ messageData: response.data })
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   })
-
 }
 
 
