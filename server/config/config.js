@@ -3,19 +3,19 @@ const Sequelize = require("sequelize");
  * create a `.env` file with environment variables in order to laod at runtime.
 */
 
-const hostUrl = process.env.NODE_ENV === `development` ? "http://localhost:4000/auth/azure/redirect" :  'https://cdrbeta.eecloud.dynamic.nsn-net.net/auth/azure/redirect';
+const hostUrl = process.env.NODE_ENV === `development` ? "http://localhost:4000/auth/azure/redirect" :  'https://apps.gdceur.eecloud.dynamic.nsn-net.net/cdrbeta/auth/azure/redirect';
 const baseLocation = process.env.NODE_ENV === `development` ? "" :  '';
 
 
 
 var config = {
-  CLIENT_HOME_PAGE_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/home" :  'https://cdrbeta.eecloud.dynamic.nsn-net.net/#/home',
-  CLIENT_ERROR_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/error" :  'https://cdrbeta.eecloud.dynamic.nsn-net.net/#/error',
+  CLIENT_HOME_PAGE_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/home" :  'https://apps.gdceur.eecloud.dynamic.nsn-net.net/cdrbeta/#/home',
+  CLIENT_ERROR_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/error" :  'https://apps.gdceur.eecloud.dynamic.nsn-net.net/cdrbeta/#/error',
   azureApp: {
     // Azure Application details
     base: process.env.AAD_AUTH_URL || 'https://login.microsoftonline.com/',
-    clientID: process.env.AAD_AUTH_CLIENTID || '6181870f-f95d-482e-9956-0ccc95ae9789',
-    clientSecret: process.env.AAD_AUTH_CLIENTSECRET || 'B6rFwdW6-adys1~-jj.1FJcP2~D..zL9XD',
+    clientID: process.env.AAD_AUTH_CLIENTID || 'ae919e4c-3cba-44d7-80d6-f94ea0898d7d',
+    clientSecret: process.env.AAD_AUTH_CLIENTSECRET || '~GGPP7dpehaav.Y.jLci8enaw~M5ibT_23',
     callbackUri: hostUrl + '/auth/cbAdfs',
     resource: process.env.MS_GRAPH_URL || 'https://graph.microsoft.com/',
     tenant: process.env.AAD_AUTH_TENANT || '5d471751-9675-428d-917b-70f44f9630b0'

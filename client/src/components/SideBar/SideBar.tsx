@@ -58,7 +58,7 @@ const Sidebar = () => {
               return <SubMenu item={item} key={index} showSidebar={showSidebar}/>;
             })}
           </div>
-          <LanguageSelector />
+          {/* <LanguageSelector /> */}
         </SidebarWrap>
       </SidebarNav>
       {/* </IconContext.Provider> */}
