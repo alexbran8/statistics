@@ -13,5 +13,5 @@ docker stop cdrbeta  && docker rm cdrbeta
 
 # delete existing image
 
-# run new image
+# run new image 
 docker run  -d -p 5003:4000  --name cdrbeta  cdrbeta 
