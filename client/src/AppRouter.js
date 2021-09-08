@@ -14,10 +14,10 @@ import authGuard from "./HOCs/authGuard.js";
 export const AppRouter = (props) => {
   return (
     <HashRouter  {...props} >
-      <Header />;
+      <Header />
       <Route exact path={"/"} component={Homepage} />
       <Route exact path={"/error"} component={LoginError} />
-      <Route exact path={"/incoherence_reporting"} component={IncoherenceReporting} />
+      <Route exact path={"/incoherence_reporting"} component={authGuard(IncoherenceReporting)} />
       <Route exact path={"/devtimeline"} component={Timeline} />
     </HashRouter>
   );
