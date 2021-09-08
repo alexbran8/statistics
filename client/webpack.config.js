@@ -11,7 +11,7 @@ const enableBundleAnalyzer = process.env.ENABLE_ANALYZER === "true";
 const watch = process.env.NODE_ENV !== 'production'
 console.log('ENV',process.env.NODE_ENV)
 
-process.env.NODE_ENV == "development" ? location = "/" : location = "/"
+process.env.NODE_ENV == "development" ? location = "/" : location = "/cdrbeta"
 
 module.exports = {
   context: __dirname,
