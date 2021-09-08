@@ -65,22 +65,49 @@ class ExcelReader extends Component {
       const wb = XLSX.read(bstr, { type: rABS ? 'binary' : 'array', bookVBA: false, cellDates: true });
       /* Get first worksheet */
       const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
+    //   check if sheets exist
+      console.log(wb)
       /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_json(ws, {
+      const data2G = XLSX.utils.sheet_to_json(wb.Sheets['Incoherence 2G'], {
         header: 0,
         defval: "",
         raw: false,
         dateNF: 'YYYY-MM-DD'
       }
 
+    //   get all incoherences
+    // const unique = [...new Set(data.map(item => item.group))]; // [ 'A', 'B']
+    
+     
+    //   console.log(data2G)
+
       );
+      
+
+      const data3G = XLSX.utils.sheet_to_json(wb.Sheets['Incoherence 3G'], {
+        header: 0,
+        defval: "",
+        raw: false,
+        dateNF: 'YYYY-MM-DD'
+      })
+      const data4G = XLSX.utils.sheet_to_json(wb.Sheets['Incoherence 4G'], {
+        header: 0,
+        defval: "",
+        raw: false,
+        dateNF: 'YYYY-MM-DD'
+      })
+      
+         var result = new Object();
+        result["2G"] = data2G.length
+        result["3G"] = data3G.length
+        result["4G"] = data4G.length
+        // result.3G:data3G.length, '4G':data4G.length })
       /* Update state */
-      this.setState({ data: data, cols: make_cols(ws['!ref']) }, () => {
+    //   this.setState({ data: data, cols: make_cols(ws['!ref']) }, () => {
         // this.sendData(this.state.data);
-        this.props.getData(this.state.data)
+        this.props.getData(result)
         //console.log(JSON.stringify(this.state.data, null, 2));
-      });
+    //   });
 
     };
 

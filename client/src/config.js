@@ -2,7 +2,7 @@ var config2 = []
 
 const prod = {
     baseURL: `${window.location.origin}`,
-    baseLOCATION: "/dashboard",
+    baseLOCATION: "",
   };
   
   const dev = {
@@ -12,8 +12,8 @@ const prod = {
   
 
   config2 = process.env.NODE_ENV === `development` ? dev : prod
-  config2.AppName = 'dashboard'
-  config2.appVersion = '1.01'
+  config2.AppName = 'cdrbeta'
+  config2.appVersion = '1.00'
 
   export const config = config2
 

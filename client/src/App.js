@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, Suspense  } from "react";
 import { AppRouter } from "./AppRouter";
 
 class App extends Component {
   render() {
-    return <AppRouter />;
+    return   <Suspense fallback="loading"><AppRouter /></Suspense>;
   }
 }
 
