@@ -1,0 +1,11 @@
+{
+    "home.label": "This web application is still under development...",
+    "login.label": "Login",
+    "navbar.students": "for students",
+    "availableCategory.label": "Available Items",
+    "soldCategory.label": "Sold Items",  
+    "about.label": "About",
+    "terms.label": "Terms and Conditions",
+    "cart.noItems": "There are no items in your cart."
+  }
+  

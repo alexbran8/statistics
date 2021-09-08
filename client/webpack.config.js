@@ -7,11 +7,14 @@ const ManifestPlugin = require("webpack-manifest-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 const enableBundleAnalyzer = process.env.ENABLE_ANALYZER === "true";
+const regeneratorRuntime = require("regenerator-runtime");
 
 const watch = process.env.NODE_ENV !== 'production'
 console.log('ENV',process.env.NODE_ENV)
 
-process.env.NODE_ENV == "development" ? location = "/" : location = "/cdrbeta"
+process.env.NODE_ENV == "development" ? location = "/" : location = "/"
+
+// const location = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   context: __dirname,
@@ -52,7 +55,6 @@ module.exports = {
       },
       {
         test: /.*\.(gif|png|jp(e*)g|svg)$/i,
-        exclude:  path.resolve(__dirname, "node_modules"),
         use: [
           {
             loader: "url-loader",
@@ -68,12 +70,10 @@ module.exports = {
       {
         test: /\.css$/,
         // include: path.resolve(__dirname, "../node_modules"),
-        
         use: ["style-loader", "css-loader"],
       },
       {
         test: /\.s(a|c)ss$/,
-        exclude:  path.resolve(__dirname, "node_modules"),
         use: [
           { loader: MiniCssExtractPlugin.loader },
           { loader: "css-loader" },
@@ -82,7 +82,6 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        exclude:  path.resolve(__dirname, "node_modules"),
         use: [
           {
             loader: "html-loader",
@@ -97,18 +96,18 @@ module.exports = {
       template: "./public/index.html",
       filename: "./index.html",
     }),
-
+    // new ManifestPlugin(),
     new CleanWebpackPlugin(),
     // new OptimizeCssAssetsPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].[hash:8].css",
       chunkFilename: "[id].[hash:8].css",
     }),
-
+    // new ManifestPlugin(),
     new BundleAnalyzerPlugin({
       analyzerMode: enableBundleAnalyzer === true ? "static" : "disabled",
       openAnalyzer: true,
-    })
+    }),
   ],
   watch
 }

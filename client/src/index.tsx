@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import './main.scss'
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import reduxThunk from 'redux-thunk'
@@ -12,10 +12,6 @@ import reducers from './redux/reducers/index'
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { config } from "./config"
-import "./services/i18n";
-
-
-
 
 import { composeWithDevTools } from "redux-devtools-extension";
 
@@ -49,4 +45,4 @@ ReactDOM.render(  <ApolloProvider client={apiclient}><Provider
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
-registerServiceWorker();
+serviceWorker.unregister();

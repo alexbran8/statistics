@@ -1,17 +1,17 @@
 import React from "react";
 import "./Homepage.scss"
-import { withTranslation } from "react-i18next";
-import "../services/i18n";
-import LanguageSelector from "./LanguageSelector";
-import { useTranslation } from "react-i18next";
+// import { withTranslation } from "react-i18next";
+// import "../services/i18n";
+// import LanguageSelector from "./LanguageSelector";
+// import { useTranslation } from "react-i18next";
 
 
 const LoginError = () => {
-    const { t, i18n } = useTranslation();
+    // const { t, i18n } = useTranslation();
 
-    const changeLanguage = (event) => {
-      i18n.changeLanguage(event.target.value);
-    };
+    // const changeLanguage = (event) => {
+    //   i18n.changeLanguage(event.target.value);
+    // };
   
   
 
