@@ -292,7 +292,7 @@ export const Header = () => {
               </Menu>
 
             </div>
-          ) : (<div><Button variant="contained" color="primary" onClick={_handleSignInClick}><span title="log in">{t("login.label")}</span></Button></div>)}
+          ) : (<div><Button variant="contained" color="primary" onClick={_handleSignInClick}><span title="log in">Login</span></Button></div>)}
         </Toolbar>
       </AppBar>
     </div>
