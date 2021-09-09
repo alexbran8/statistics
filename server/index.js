@@ -18,6 +18,10 @@ const cookieParser = require("cookie-parser"); // parse cookie header
 const path = require("path");
 const config = require("./config/configProvider")();
 
+
+const db = require("./models");
+
+
 const { ApolloServer } = require("apollo-server-express");
 var { graphqlHTTP } = require("express-graphql");
 var { buildSchema } = require("graphql");
@@ -43,14 +47,15 @@ const apolloServer = new ApolloServer({
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// config.db
-//   .authenticate()
-//   .then(() => {
-//     console.log("Connection has been established successfully.");
-//   })
-//   .catch((err) => {
-//     console.error("Unable to connect to the database:", err);
-//   });
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
 
 
 app.use(

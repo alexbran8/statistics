@@ -1,6 +1,6 @@
 const sequelize = require("sequelize");
 const { DataTypes, Op } = sequelize;
-const Schedule = require("../models/schedule")(sequelize, DataTypes);
+// const Schedule = require("../models/schedule")(sequelize, DataTypes);
 const { db } = require("../config/configProvider")();
 const { isNull } = require("../utils/main");
 const { emailFormater } = require("../middlewares/generics");
