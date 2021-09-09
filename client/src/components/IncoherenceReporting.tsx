@@ -74,8 +74,11 @@ const IncoherenceReporting = () => {
 
   const [saveDataMutation] = useMutation(SAVE_DATA, {
     onCompleted: (dataRes) => {
-        console.log(dataRes)
-        alert(dataRes.saveData.message)
+        alert(dataRes.saveData.message);
+        console.log(dataRes.saveData)
+        if (dataRes.saveData.success === 'true') { 
+          setFileData(null);
+        setSelectedWeek(null)} 
     },
     onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
 });
@@ -89,8 +92,7 @@ const IncoherenceReporting = () => {
     var oneJan = new Date(currentdate.getFullYear(), 0, 1);
     var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
     var result = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
-    { console.log(result + '-' + currentdate.getFullYear()) }
-    setSelectedWeek(result + '-' + currentdate.getFullYear())
+    setSelectedWeek(result-1 + '-' + currentdate.getFullYear())
 
   }
 

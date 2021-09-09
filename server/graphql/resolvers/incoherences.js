@@ -70,7 +70,7 @@ module.exports = {
         }
         else
         {
-          const response = {message: 'Data for this week already exists!', success: true}
+          const response = {message: 'Data for this week already exists!', success: false}
           return  response  
         }
           
