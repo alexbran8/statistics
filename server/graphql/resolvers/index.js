@@ -1,3 +1,3 @@
-const normsResolvers = require("./normsResolvers");
+const incoherencesResolvers = require("./incoherences");
 
-module.exports = [normsResolvers]
+module.exports = [incoherencesResolvers]

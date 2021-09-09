@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import "./IncoherenceReporting.scss"
-import { withTranslation } from "react-i18next";
-import "../services/i18n";
-import LanguageSelector from "./LanguageSelector";
-import { useTranslation } from "react-i18next";
+
+import { useMutation, useQuery, gql } from "@apollo/client";
+
 import ExcelReader from "./ExcelReader";
 import Button from '@material-ui/core/Button';
 
@@ -17,6 +16,16 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from '@material-ui/core/TextField';
+
+const SAVE_DATA = gql`
+mutation ($data: [Incoherence], $week: String!) {
+    saveData (data:$data, week:$week){
+        success
+        message
+      }
+    }
+
+`;
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -41,19 +50,38 @@ const useStyles = makeStyles({
 const IncoherenceReporting = () => {
   const newDate = new Date()
   const classes = useStyles();
-  const { t, i18n } = useTranslation();
   const [fileData, setFileData] = useState();
   const [showUploadModal, setShowUploadModal] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState()
 
-  const changeLanguage = (event) => {
-    i18n.changeLanguage(event.target.value);
-  };
-
+  
   const sendData = (data) => {
     var that = this;
     setFileData(data)
   }
+
+  const saveData = () => {
+    console.log('data saved')
+    console.log(fileData)
+    console.log(selectedWeek)
+    saveDataMutation({
+      variables: { week: selectedWeek, data: fileData }
+    }
+  )
+}
+
+
+
+  const [saveDataMutation] = useMutation(SAVE_DATA, {
+    onCompleted: (dataRes) => {
+        console.log(dataRes)
+        alert(dataRes.saveData.message)
+    },
+    onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
+});
+
+
+
 
   const getWeek = (date) => {
 
@@ -86,9 +114,9 @@ const IncoherenceReporting = () => {
               <TableBody>
                 <TableRow>
                   <StyledTableCell>Value(number of incoherences):</StyledTableCell>
-                  <StyledTableCell align="right">{fileData["2G"]}</StyledTableCell>
-                  <StyledTableCell align="right">{fileData["3G"]}</StyledTableCell>
-                  <StyledTableCell align="right">{fileData["4G"]}</StyledTableCell>
+                  <StyledTableCell align="right">{fileData["_2G"]}</StyledTableCell>
+                  <StyledTableCell align="right">{fileData["_3G"]}</StyledTableCell>
+                  <StyledTableCell align="right">{fileData["_4G"]}</StyledTableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -107,7 +135,7 @@ const IncoherenceReporting = () => {
           />
           {selectedWeek ? <div>Selected week is : <b>{selectedWeek}</b></div> : null}
           <div>
-            <Button variant="contained" color="primary" disabled={selectedWeek? false : true} onClick={() => setShowUploadModal(!showUploadModal)}>Save</Button>
+            <Button variant="contained" color="primary" disabled={selectedWeek? false : true} onClick={() => saveData()}>Save</Button>
           </div>
         </div>
         : null}
