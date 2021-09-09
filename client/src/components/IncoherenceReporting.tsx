@@ -54,7 +54,7 @@ const IncoherenceReporting = () => {
   const [showUploadModal, setShowUploadModal] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState()
 
-  
+
   const sendData = (data) => {
     var that = this;
     setFileData(data)
@@ -67,21 +67,22 @@ const IncoherenceReporting = () => {
     saveDataMutation({
       variables: { week: selectedWeek, data: fileData }
     }
-  )
-}
+    )
+  }
 
 
 
   const [saveDataMutation] = useMutation(SAVE_DATA, {
     onCompleted: (dataRes) => {
-        alert(dataRes.saveData.message);
-        console.log(dataRes.saveData)
-        if (dataRes.saveData.success === 'true') { 
-          setFileData(null);
-        setSelectedWeek(null)} 
+      alert(dataRes.saveData.message);
+      console.log(dataRes.saveData)
+      if (dataRes.saveData.success === 'true') {
+        setFileData(null);
+        setSelectedWeek(null)
+      }
     },
     onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
-});
+  });
 
 
 
@@ -92,7 +93,7 @@ const IncoherenceReporting = () => {
     var oneJan = new Date(currentdate.getFullYear(), 0, 1);
     var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
     var result = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
-    setSelectedWeek(result-1 + '-' + currentdate.getFullYear())
+    setSelectedWeek(result - 1 + '-' + currentdate.getFullYear())
 
   }
 
@@ -139,6 +140,9 @@ const IncoherenceReporting = () => {
           <div>
             <Button variant="contained" color="primary" disabled={selectedWeek? false : true} onClick={() => saveData()}>Save</Button>
           </div>
+          <div>
+            <Button variant="contained" color="secondary"  onClick={() =>  {setFileData(null);setSelectedWeek(null);}}>Close</Button>
+          </div>
         </div>
         : null}
     </div>
@@ -146,7 +150,7 @@ const IncoherenceReporting = () => {
       setShowModal={() => setShowUploadModal(!showUploadModal)}
       getData={sendData}
       showModal={showUploadModal} />
-  </div>)
+  </div >)
 
 }
 
