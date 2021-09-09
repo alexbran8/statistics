@@ -2,7 +2,7 @@ var config2 = []
 
 const prod = {
     baseURL: `${window.location.origin}`,
-    baseLOCATION: "",
+    baseLOCATION: "/cdrbeta",
   };
   
   const dev = {
