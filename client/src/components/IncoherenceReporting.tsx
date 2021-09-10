@@ -17,11 +17,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Autocomplete from "@material-ui/lab/Autocomplete";
+
 import TextField from '@material-ui/core/TextField';
 
 import { useForm } from 'react-hook-form'
-import { Modal, Form } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 
 const SAVE_DATA = gql`
 mutation ($data: [Incoherence], $week: String!) {
