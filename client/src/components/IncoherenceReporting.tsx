@@ -256,7 +256,7 @@ const IncoherenceReporting = () => {
             <span role="alert">This is required</span>
           )} */}
           {/* <Form.Label aria-invalid={errors.date ? "true" : "false"}>End Week</Form.Label> */}
-          {/* <Form.Control type="text" name="endWeek"  onChange={(e) => { setEndDate(e.target.value) }}  ref={register({ required: true })} /> */} */}
+          {/* <Form.Control type="text" name="endWeek"  onChange={(e) => { setEndDate(e.target.value) }}  ref={register({ required: true })} /> */} 
           {/* {errors.date && errors.date.type === "required" && (
             <span role="alert">This is required</span>
           )} */}
@@ -267,7 +267,7 @@ const IncoherenceReporting = () => {
         data={lineChartData.data}
         options={lineChartData.options}
         plugins={[ChartDataLabels]}
-        height={200}
+        height={0}
         width={250}
       //  options={} 
       />
