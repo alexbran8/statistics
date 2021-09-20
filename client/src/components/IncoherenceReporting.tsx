@@ -154,13 +154,15 @@ alert('x')
           data: firstCat,
           yAxisID: 'A',
           fill: false,
-          // backgroundColor: 'rgb(255, 99, 132)',
+          // color: 'red',
+          backgroundColor: 'blue',
+          // backgroundColor: "rgba(75,192,192,0.2)",
           borderColor: 'rgb(54, 162, 235)',
           borderWidth: 2,
           datalabels: {
             color: 'white',
             font: 'bold',
-            backgroundColor: 'black',
+            backgroundColor: 'blue',
             borderColor: 'rgb(54, 162, 235)',
             borderWidth: 2
           }
@@ -170,33 +172,35 @@ alert('x')
           type: 'line',
           label: '3G',
           data: secondCat,
+          color: '#1f77b4',
           yAxisID: 'A',
           fill: false,
-          // backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(54, 162, 235)',
+          backgroundColor: 'red',
+          borderColor: 'red',
           borderWidth: 2,
           datalabels: {
             color: 'white',
             font: 'bold',
             backgroundColor: 'black',
-            borderColor: 'rgb(54, 162, 235)',
+            borderColor: 'red',
             borderWidth: 2
           }
         },
         {
           type: 'line',
           label: '4G',
+          color: 'red',
           data: thirdCat,
           yAxisID: 'A',
           fill: false,
-          // backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(54, 162, 235)',
+          backgroundColor: 'green',
+          borderColor: 'green',
           borderWidth: 2,
           datalabels: {
             color: 'white',
             font: 'bold',
             backgroundColor: 'black',
-            borderColor: 'rgb(54, 162, 235)',
+            borderColor: 'green',
             borderWidth: 2
           }
   
