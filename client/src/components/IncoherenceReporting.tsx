@@ -119,7 +119,9 @@ const IncoherenceReporting = () => {
   }
 
   const saveData = () => {
-   refetch;
+    saveDataMutation({
+      variables: { week: selectedWeek, data: fileData }
+    })
   }
 
   const onSubmit = (data) => {
