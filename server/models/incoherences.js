@@ -3,7 +3,7 @@ module.exports = (sequelize, type) => {
     "incoherences_weekly",
     {
       week: { type: type.STRING },
-      tehnology: {
+      technology: {
         type: type.STRING,
         required: true,
       },

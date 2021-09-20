@@ -18,12 +18,16 @@ module.exports = {
 
     // },
 
-    // async normCheckQueryNA(root, args, context) {
-    //   let result = await db.query(`SELECT * FROM get_norms_na()`);
-    //   console.log('y')
-    //   return result[0];
+    async getAll(root, args, context) {
+      let result = await db.Incoherences.findAll({
+        // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
+        limit: args.first
+      });
+      console.log(result[0])
 
-    // }
+      return result;
+
+    }
   },
   Mutation: {
     async saveData(root, data, context) {
@@ -42,19 +46,19 @@ module.exports = {
         let incoherences = [];
 
           const row2G = {
-            tehnology: "2G",
+            technology: "2G",
             week: data.week,
             values: data.data[0]["_2G"],
             date: Date.now(),
           }
           const row3G = {
-            tehnology: "3G",
+            technology: "3G",
             week: data.week,
             values: data.data[0]["_3G"],
             date: Date.now(),
           }
           const row4G = {
-            tehnology: "4G",
+            technology: "4G",
             week: data.week,
             values: data.data[0]["_4G"],
             date: Date.now(),

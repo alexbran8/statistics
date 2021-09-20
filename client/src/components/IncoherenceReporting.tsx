@@ -33,6 +33,17 @@ mutation ($data: [Incoherence], $week: String!) {
 
 `;
 
+const GET_ALL = gql`
+  query  { 
+    getAll(first:10)  {
+        values
+        week
+        technology
+    }
+  }
+`;
+
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -61,6 +72,43 @@ const IncoherenceReporting = () => {
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [selectedWeek, setSelectedWeek] = useState()
   const { register, handleSubmit, errors } = useForm();
+  const [items, setItems] = useState();
+  const [firstCat, set2G] = useState();
+  const [secondCat, set3G] = useState();
+  const [thirdCat, set4G] = useState();
+  const [dateAxis,setdateAxis] = useState();
+
+  const { data, loading, error, refetch } = useQuery(GET_ALL, {
+    variables: { first: 10 }, onCompleted: (
+    ) => {
+
+      var total = []
+      // get all incoherences
+      data.getAll.reduce(function (res, value) {
+        if (!res[value.week]) {
+          res[value.week] = { week: value.week, values: 0 };
+          total.push(res[value.week])
+        }
+        res[value.week].values += parseFloat(value.values);
+        return res;
+      }, {});
+        
+        var array = data.getAll.filter(a => a.technology == '2G').map(function(x) {return x.values})
+        var div = [...total].map((e, i) => (e.values / array[i]).toFixed(2));
+        set2G(div)
+        var array = data.getAll.filter(a => a.technology == '3G').map(function(x) {return x.values})
+        var div = [...total].map((e, i) => (e.values / array[i]).toFixed(2));
+        set3G(div)
+        var array = data.getAll.filter(a => a.technology == '4G').map(function(x) {return x.values})
+        var div = [...total].map((e, i) => (e.values / array[i]).toFixed(2));
+        set4G(div)
+        var array = data.getAll.map(function(x) {return x.week})
+        let unique = [...new Set(array)];
+        setdateAxis(unique)
+        console.log(firstCat)  
+    }
+});
+
 
   
   const date = moment().format("YYYY-MM-DD")
@@ -71,24 +119,12 @@ const IncoherenceReporting = () => {
   }
 
   const saveData = () => {
-    console.log('data saved')
-    console.log(fileData)
-    console.log(selectedWeek)
-    saveDataMutation({
-      variables: { week: selectedWeek, data: fileData }
-    }
-    )
+   refetch;
   }
 
   const onSubmit = (data) => {
-
-    apiService.graphql({
-      query: GET_REPORTING,
-      variables: { startDate: data.startDate, endDate: data.endDate },
-    })
-      .then((response) => {
-        console.log(response)
-      })
+alert('x')
+  refetch()
     }
 
 
@@ -108,12 +144,47 @@ const IncoherenceReporting = () => {
 
   const lineChartData = {
     data: {
-      labels: ['W1', 'W2'],
+      labels: dateAxis,
       datasets: [
         {
           type: 'line',
-          label: 'Taux de fiabilite',
-          data: [1,2],
+          label: '2G',
+          data: firstCat,
+          yAxisID: 'A',
+          fill: false,
+          // backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(54, 162, 235)',
+          borderWidth: 2,
+          datalabels: {
+            color: 'white',
+            font: 'bold',
+            backgroundColor: 'black',
+            borderColor: 'rgb(54, 162, 235)',
+            borderWidth: 2
+          }
+  
+        },
+        {
+          type: 'line',
+          label: '3G',
+          data: secondCat,
+          yAxisID: 'A',
+          fill: false,
+          // backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(54, 162, 235)',
+          borderWidth: 2,
+          datalabels: {
+            color: 'white',
+            font: 'bold',
+            backgroundColor: 'black',
+            borderColor: 'rgb(54, 162, 235)',
+            borderWidth: 2
+          }
+        },
+        {
+          type: 'line',
+          label: '4G',
+          data: thirdCat,
           yAxisID: 'A',
           fill: false,
           // backgroundColor: 'rgb(255, 99, 132)',
@@ -171,18 +242,18 @@ const IncoherenceReporting = () => {
             text: '%'
           }
         },
-        B: {
-          type: 'linear',
-          position: 'right',
-          title: {
-            display: true,
-            text: 'Nombre de cellules'
-          },
-          ticks: {
-            // max: 1,
-            // min: 1000
-          }
-        }
+        // B: {
+        //   type: 'linear',
+        //   position: 'right',
+        //   title: {
+        //     display: true,
+        //     text: '%'
+        //   },
+        //   ticks: {
+        //     // max: 1,
+        //     // min: 1000
+        //   }
+        // }
       },
     }
   }
