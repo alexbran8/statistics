@@ -6,6 +6,7 @@ input Incoherence {
     _3G: Int!
     _4G: Int!
   }
+
   type Response {
     success: String!
     message: String!
@@ -16,7 +17,6 @@ input Incoherence {
     week: String
     technology: String
   }
-
 
 extend type Mutation {
   saveData (data: [Incoherence], week: String!):Response!
