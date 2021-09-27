@@ -97,7 +97,6 @@ module.exports = {
           
           db.IncoherencesCat.bulkCreate(incoherencesCat)
           
-          
           const response = {message: 'Data has been successfully saved!', success: true}
           return  response  
         }
