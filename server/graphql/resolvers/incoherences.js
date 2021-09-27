@@ -1,7 +1,7 @@
 const e = require("cors");
 
 const db = require("../../models");
-
+const { Op } = require("sequelize");
 const errorHandler = (err, req, res, next) => {
   const { code, desc = err.message } = err;
   res.status(code || 500).json({ data: null, error: desc });
@@ -11,17 +11,30 @@ const errorHandler = (err, req, res, next) => {
 
 module.exports = {
   Query: {
-    // async normCheckQuery(root, args, context) {
-    //   console.log(args)
-    //   let result = await db.query(`SELECT * FROM get_norms_check('${args.department}')`);
-    //   return result[0];
-
-    // },
+    async refreshReporting(root, args, context) {
+      console.log(args)
+      const start = new Date(args.startDate)
+      console.log(start)
+      // return etat_reporting.objects.filter(Date__range=(endDate,startDate)).order_by('Date').all()
+      let result = await db.EtatReporting.findAll({
+        where:{ Date: {
+          [Op.between]: [args.endDate, args.startDate],
+         },
+        },
+        order: [
+          ['Date', 'ASC'],
+      ],});
+      console.log(result)
+      return result;
+    },
 
     async getAll(root, args, context) {
       let result = await db.Incoherences.findAll({
         // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
-        limit: args.first
+        limit: args.first,
+        order: [
+          ['week', 'ASC'],
+      ],
       });
       console.log(result[0])
 

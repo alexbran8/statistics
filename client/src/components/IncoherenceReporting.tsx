@@ -3,7 +3,7 @@ import "./IncoherenceReporting.scss"
 import moment from "moment";
 import { useMutation, useQuery, gql } from "@apollo/client";
 
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import ExcelReader from "./ExcelReader";
@@ -92,15 +92,20 @@ const IncoherenceReporting = () => {
         res[value.week].values += parseFloat(value.values);
         return res;
       }, {});
+
+      console.log(total)
         
         var array = data.getAll.filter(a => a.technology == '2G').map(function(x) {return x.values})
-        var div = [...total].map((e, i) => (e.values / array[i]).toFixed(2));
+        console.log(array)
+        var div = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
         set2G(div)
         var array = data.getAll.filter(a => a.technology == '3G').map(function(x) {return x.values})
-        var div = [...total].map((e, i) => (e.values / array[i]).toFixed(2));
+        console.log(array)
+        var div = [...total].map((e, i) => ( array[i]/ e.values*100).toFixed(2));
         set3G(div)
         var array = data.getAll.filter(a => a.technology == '4G').map(function(x) {return x.values})
-        var div = [...total].map((e, i) => (e.values / array[i]).toFixed(2));
+        console.log(array)
+        var div = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
         set4G(div)
         var array = data.getAll.map(function(x) {return x.week})
         let unique = [...new Set(array)];
@@ -148,61 +153,126 @@ alert('x')
     data: {
       labels: dateAxis,
       datasets: [
+        // {
+        //   type: 'bar',
+        //   label: '2G',
+        //   stack: 'stack1',
+        //   data: firstCat,
+        //   yAxisID: 'A',
+        //   fill: true,
+        //   // color: 'red',
+        //   // backgroundColor: 'blue',
+        //   // backgroundColor: "rgba(75,192,192,0.2)",
+        //   borderColor: 'rgb(54, 162, 235)',
+        //   borderWidth: 2,
+        //   datalabels: {
+        //     color: 'black',
+        //     font: 'bold',
+        //     align: "top",
+        //     // backgroundColor: 'blue',
+        //     // borderColor: 'rgb(54, 162, 235)',
+        //     borderWidth: 2
+        //   }
+  
+        // },
+        // {
+        //   type: 'bar',
+        //   label: '3G',
+        //   data: secondCat,
+        //   stack: 'stack1',
+        //   color: '#1f77b4',
+        //   yAxisID: 'A',
+        //   fill: false,
+        //   // backgroundColor: 'red',
+        //   borderColor: 'orange',
+        //   borderWidth: 2,
+        //   datalabels: {
+        //     color: 'black ',
+        //     font: 'bold',
+        //     // backgroundColor: 'black',
+        //     align: "top",
+        //   }
+        // },
+        // {
+        //   type: 'bar',
+        //   label: '4G',
+        //   color: 'red',
+        //   stack: 'stack1',
+        //   data: thirdCat,
+        //   yAxisID: 'A',
+        //   fill: false,
+        //   // backgroundColor: 'green',
+        //   borderColor: 'green',
+        //   borderWidth: 2,
+        //   datalabels: {
+        //     color: 'black',
+        //     font: 'bold',
+        //   align: 'top'
+        //   }
+  
+        // },
         {
-          type: 'line',
+          type: 'bar',
           label: '2G',
+          stack: 'stack1',
           data: firstCat,
           yAxisID: 'A',
-          fill: false,
-          // color: 'red',
+          xAxisID: 'X',
+          fill: true,
+          barThickness : '200',
+          color: 'red',
           backgroundColor: 'blue',
           // backgroundColor: "rgba(75,192,192,0.2)",
-          borderColor: 'rgb(54, 162, 235)',
+          borderColor: 'blue',
           borderWidth: 2,
           datalabels: {
             color: 'white',
             font: 'bold',
-            backgroundColor: 'blue',
-            borderColor: 'rgb(54, 162, 235)',
+            align: "top",
+            // backgroundColor: 'blue',
+            // borderColor: 'rgb(54, 162, 235)',
             borderWidth: 2
           }
   
         },
         {
-          type: 'line',
+          type: 'bar',
           label: '3G',
           data: secondCat,
+          stack: 'stack1',
           color: '#1f77b4',
           yAxisID: 'A',
+          xAxisID: 'X',
           fill: false,
+          barThickness : '200',
           backgroundColor: 'red',
           borderColor: 'red',
           borderWidth: 2,
           datalabels: {
-            color: 'white',
+            color: 'white ',
             font: 'bold',
-            backgroundColor: 'black',
-            borderColor: 'red',
-            borderWidth: 2
+            // backgroundColor: 'black',
+            align: "top",
           }
         },
         {
-          type: 'line',
+          type: 'bar',
           label: '4G',
           color: 'red',
+          stack: 'stack1',
           data: thirdCat,
           yAxisID: 'A',
+          xAxisID: 'X',
           fill: false,
           backgroundColor: 'green',
           borderColor: 'green',
+          barThickness : '200',
           borderWidth: 2,
-          datalabels: {
-            color: 'white',
-            font: 'bold',
-            backgroundColor: 'black',
-            borderColor: 'green',
-            borderWidth: 2
-          }
+          // datalabels: {
+          //   color: 'black',
+          //   font: 'bold',
+          // align: 'top'
+          // }
   
         },
         // {
@@ -230,6 +300,13 @@ alert('x')
       ],
     },
     options: {
+      xAxes: [{
+        stacked: true,
+        barPercentage: 0.4
+      }],
+      yAxes: [{
+        stacked: true
+    }],
       plugins: {
         datalabels: {
           color: 'white',
@@ -243,11 +320,13 @@ alert('x')
         A: {
           type: 'linear',
           position: 'left',
+          stacked: true,
           title: {
             display: true,
             text: '%'
           }
         },
+        
         // B: {
         //   type: 'linear',
         //   position: 'right',
@@ -340,7 +419,7 @@ alert('x')
         </Form.Group>
         <button type="submit" disabled={allCheck} className="centerBtn btn btn-success">Refresh</button>
       </Form>
-      <Line
+      <Bar
         data={lineChartData.data}
         options={lineChartData.options}
         plugins={[ChartDataLabels]}

@@ -12,7 +12,7 @@ import reducers from './redux/reducers/index'
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { config } from "./config"
-import "./services/i18n";
+// import "./services/i18n";
 
 
 

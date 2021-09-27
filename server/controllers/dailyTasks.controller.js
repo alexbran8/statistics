@@ -1,7 +1,7 @@
 const { db } = require("../config/configProvider")();
 const sequelize = require("sequelize");
 const { DataTypes, Op } = sequelize;
-const Project = require("../models/dailyTasks.model")(sequelize, DataTypes);
+// const Project = require("../models/dailyTasks.model")(sequelize, DataTypes);
 // const Schedule = require("../models/schedule")(sequelize, DataTypes);
 // Create and Save a new Project
 exports.create = async (req, res) => {

@@ -5,6 +5,7 @@ import Homepage from "./components/Homepage";
 import Timeline from "./components/Timeline.jsx"
 import Database from "./components/Admin/Database"
 import IncoherenceReporting from "./components/IncoherenceReporting";
+import Reporting from "./components/Reporting/Reporting";
 
 import { Header } from "./components/Header";
 import { HashRouter, Route } from "react-router-dom";
@@ -18,6 +19,7 @@ export const AppRouter = (props) => {
       <Route exact path={"/"} component={Homepage} />
       <Route exact path={"/error"} component={LoginError} />
       <Route exact path={"/incoherence_reporting"} component={authGuard(IncoherenceReporting)} />
+      <Route exact path={"/reporting"} component={authGuard(Reporting)} />
       <Route exact path={"/devtimeline"} component={Timeline} />
     </HashRouter>
   );

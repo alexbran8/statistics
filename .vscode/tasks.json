@@ -28,7 +28,7 @@
         {
             "label": "Server Build",
             "type": "chrome",
-}
+},
      
         {
             "label": "Build",

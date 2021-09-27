@@ -50,6 +50,13 @@ export const SidebarData = [
     // iconClosed: <RiIcons.RiArrowDownSFill />,
     // iconOpened: <RiIcons.RiArrowUpSFill />,
   },
+  {
+    title: "Etat Reporting",
+    path: "/reporting",
+    // icon: <IoIcons.IoIosPaper />,
+    // iconClosed: <RiIcons.RiArrowDownSFill />,
+    // iconOpened: <RiIcons.RiArrowUpSFill />,
+  },
   // {
   //   title: "Events",
   //   path: "#",

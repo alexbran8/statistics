@@ -12,6 +12,14 @@ input Incoherence {
     message: String!
   }
 
+  type Etat {
+    Date: String
+    CATEGORY: String
+    count: Int
+    ETAT: String
+    percentage: String
+  }
+
   type IncoherenceModel {
     values: Int
     week: String
@@ -24,5 +32,6 @@ extend type Mutation {
 
 extend type Query {
   getAll (first:Int!):[IncoherenceModel]
+  refreshReporting(startDate:String! endDate:String!):[Etat]
 }
 `;
