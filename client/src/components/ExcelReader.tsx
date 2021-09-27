@@ -101,6 +101,9 @@ class ExcelReader extends Component {
         result["_2G"] = data2G.length
         result["_3G"] = data3G.length
         result["_4G"] = data4G.length
+        result["data2G"] = data2G
+        result["data3G"] = data3G
+        result["data4G"] = data4G
         // result.3G:data3G.length, '4G':data4G.length })
       /* Update state */
     //   this.setState({ data: data, cols: make_cols(ws['!ref']) }, () => {

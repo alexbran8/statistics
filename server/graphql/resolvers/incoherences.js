@@ -45,51 +45,49 @@ module.exports = {
   Mutation: {
     async saveData(root, data, context) {
       try {
-        
-        let check = await db.Incoherences.findAll({
-          where: {
-          week: data.week
-          }
-        });
+        console.log(data)
+        // let check = await db.Incoherences.findAll({
+        //   where: {
+        //   week: data.week
+        //   }
+        // });
 
-        console.log()
+        // if(check[0] === undefined) {
 
-        if(check[0] === undefined) {
+        // let incoherences = [];
 
-        let incoherences = [];
+        //   const row2G = {
+        //     technology: "2G",
+        //     week: data.week,
+        //     values: data.data[0]["_2G"],
+        //     date: Date.now(),
+        //   }
+        //   const row3G = {
+        //     technology: "3G",
+        //     week: data.week,
+        //     values: data.data[0]["_3G"],
+        //     date: Date.now(),
+        //   }
+        //   const row4G = {
+        //     technology: "4G",
+        //     week: data.week,
+        //     values: data.data[0]["_4G"],
+        //     date: Date.now(),
+        //   }
 
-          const row2G = {
-            technology: "2G",
-            week: data.week,
-            values: data.data[0]["_2G"],
-            date: Date.now(),
-          }
-          const row3G = {
-            technology: "3G",
-            week: data.week,
-            values: data.data[0]["_3G"],
-            date: Date.now(),
-          }
-          const row4G = {
-            technology: "4G",
-            week: data.week,
-            values: data.data[0]["_4G"],
-            date: Date.now(),
-          }
-
-          incoherences.push(row2G)
-          incoherences.push(row3G)
-          incoherences.push(row4G)
-          db.Incoherences.bulkCreate(incoherences)
+        //   incoherences.push(row2G)
+        //   incoherences.push(row3G)
+        //   incoherences.push(row4G)
+        //   db.Incoherences.bulkCreate(incoherences)
           
-          const response = {message: 'Data has been successfully saved!', success: true}
-          return  response  
-        }
-        else
-        {
-          const response = {message: 'Data for this week already exists!', success: false}
-          return  response  
-        }
+        //   const response = {message: 'Data has been successfully saved!', success: true}
+        //   return  response  
+        // }
+        // else
+        // {
+        //   const response = {message: 'Data for this week already exists!', success: false}
+        //   return  response  
+        // }
           
         }
 

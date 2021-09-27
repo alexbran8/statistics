@@ -45,7 +45,7 @@ const apolloServer = new ApolloServer({
 });
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({  extended: true }))
 
 db.sequelize
   .authenticate()

@@ -24,14 +24,15 @@ import { useForm } from 'react-hook-form'
 import { Form } from 'react-bootstrap'
 
 const SAVE_DATA = gql`
-mutation ($data: [Incoherence], $week: String!) {
-    saveData (data:$data, week:$week){
+mutation ($data: [Incoherence] $dataSub: [IncoherencesSub], $week: String!) {
+    saveData (data:$data, dataSub: $dataSub, week:$week){
         success
         message
       }
     }
 
 `;
+
 
 const GET_ALL = gql`
   query  { 
@@ -73,6 +74,8 @@ const IncoherenceReporting = () => {
   const [selectedWeek, setSelectedWeek] = useState()
   const { register, handleSubmit, errors } = useForm();
   const [items, setItems] = useState();
+
+  const [dataCat, setDataCat] = useState();
   const [firstCat, set2G] = useState();
   const [secondCat, set3G] = useState();
   const [thirdCat, set4G] = useState();
@@ -121,21 +124,48 @@ const IncoherenceReporting = () => {
   const sendData = (data) => {
     var that = this;
     setFileData(data)
+    // get data by categories
+    autoConvertMapToObject(splitCount(data["data2G"]), "2G")
+    autoConvertMapToObject(splitCount(data["data3G"]), "3G")
+    autoConvertMapToObject(splitCount(data["data4G"]), "4G")
+    var merged = autoConvertMapToObject(splitCount(data["data2G"]), "2G")
+    .concat(autoConvertMapToObject(splitCount(data["data3G"]), "3G"), autoConvertMapToObject(splitCount(data["data4G"]), "4G"))
+    // .groupBy("incoherence")
+    setDataCat(merged)
+    // .map(_.spread(_.merge))
+    // .value();
+  
+
+  }
+
+  const splitCount = (data) => {
+    const distinctItems = [...new Map(data.map(item => [item["Incoherence remonte"], data.filter(x => x["Incoherence remonte"] == item["Incoherence remonte"]).length]))];
+    return distinctItems
   }
 
   const saveData = () => {
     saveDataMutation({
-      variables: { week: selectedWeek, data: fileData }
+      variables: { week: selectedWeek,  data: fileData }
     })
   }
 
   const onSubmit = (data) => {
-alert('x')
   refetch()
     }
 
 
-
+    const autoConvertMapToObject = (map, technology) => {
+      const obj = [];
+      for (const item of [...map]) {
+        const [
+          key,
+          value
+        ] = item;
+        obj.push({'incoherence': key, 'value': value, 'technology': technology});
+        // obj['tehnology'] = technology
+      }
+      return obj;
+    }
 
   const [saveDataMutation] = useMutation(SAVE_DATA, {
     onCompleted: (dataRes) => {
@@ -378,6 +408,30 @@ alert('x')
                   <StyledTableCell align="right">{fileData["_3G"]}</StyledTableCell>
                   <StyledTableCell align="right">{fileData["_4G"]}</StyledTableCell>
                 </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Incoherence</StyledTableCell>
+                  <StyledTableCell align="right">Technology</StyledTableCell>
+                  <StyledTableCell align="right">Value</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dataCat && dataCat.map((item, index) => {
+                  return (
+                    <TableRow key={index}>
+                    <StyledTableCell>{item.incoherence}</StyledTableCell>
+                    <StyledTableCell align="right">{item.technology}</StyledTableCell>
+                    <StyledTableCell align="right">{item.value}</StyledTableCell>
+                  </TableRow>
+                  )
+                })}
+
               </TableBody>
             </Table>
           </TableContainer>
