@@ -2,6 +2,7 @@ const e = require("cors");
 
 const db = require("../../models");
 const { Op } = require("sequelize");
+// const { default: IncoherenceReporting } = require("../../../client/src/components/IncoherenceReporting");
 const errorHandler = (err, req, res, next) => {
   const { code, desc = err.message } = err;
   res.status(code || 500).json({ data: null, error: desc });
@@ -45,49 +46,66 @@ module.exports = {
   Mutation: {
     async saveData(root, data, context) {
       try {
-        console.log(data)
-        // let check = await db.Incoherences.findAll({
-        //   where: {
-        //   week: data.week
-        //   }
-        // });
+        let check = await db.Incoherences.findAll({
+          where: {
+          week: data.week
+          }
+        });
 
-        // if(check[0] === undefined) {
+        if(check[0] === undefined) {
 
-        // let incoherences = [];
+        let incoherences = [];
 
-        //   const row2G = {
-        //     technology: "2G",
-        //     week: data.week,
-        //     values: data.data[0]["_2G"],
-        //     date: Date.now(),
-        //   }
-        //   const row3G = {
-        //     technology: "3G",
-        //     week: data.week,
-        //     values: data.data[0]["_3G"],
-        //     date: Date.now(),
-        //   }
-        //   const row4G = {
-        //     technology: "4G",
-        //     week: data.week,
-        //     values: data.data[0]["_4G"],
-        //     date: Date.now(),
-        //   }
+          const row2G = {
+            technology: "2G",
+            week: data.week,
+            values: data.data[0]["_2G"],
+            date: Date.now(),
+          }
+          const row3G = {
+            technology: "3G",
+            week: data.week,
+            values: data.data[0]["_3G"],
+            date: Date.now(),
+          }
+          const row4G = {
+            technology: "4G",
+            week: data.week,
+            values: data.data[0]["_4G"],
+            date: Date.now(),
+          }
 
-        //   incoherences.push(row2G)
-        //   incoherences.push(row3G)
-        //   incoherences.push(row4G)
-        //   db.Incoherences.bulkCreate(incoherences)
+          incoherences.push(row2G)
+          incoherences.push(row3G)
+          incoherences.push(row4G)
+          db.Incoherences.bulkCreate(incoherences)
+
+          let incoherencesCat = [];
+          console.log(data.dataSub)
+
+          for (var i=0; i<data.dataSub.length; i++) {
+            const row = {
+              values: data.dataSub[i].value,
+              technology: data.dataSub[i].technology,
+              incoherence: data.dataSub[i].incoherence,
+              week: data.week,
+              date: Date.now()
+            }
+
+            incoherencesCat.push(row)
+          }
           
-        //   const response = {message: 'Data has been successfully saved!', success: true}
-        //   return  response  
-        // }
-        // else
-        // {
-        //   const response = {message: 'Data for this week already exists!', success: false}
-        //   return  response  
-        // }
+          db.IncoherencesCat.bulkCreate(incoherencesCat)
+          
+          
+          const response = {message: 'Data has been successfully saved!', success: true}
+          return  response  
+        }
+        else
+        {
+          const response = {message: 'Data for this week already exists!', success: false}
+          return  response  
+        }
           
         }
 
