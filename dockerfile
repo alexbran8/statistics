@@ -19,7 +19,7 @@ RUN npm run dev
 # backend
 WORKDIR /opt/app/server
 RUN npm install
-RUN npm install cross-env
+# RUN npm i cross-env
 RUN npm install pm2 -g
 
 # start server
