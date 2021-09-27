@@ -33,7 +33,7 @@ input Incoherence {
   }
 
 extend type Mutation {
-  saveData (data: [Incoherence],  week: String!):Response!
+  saveData (data: [Incoherence], dataSub: [IncoherencesSub], week: String!):Response!
 }
 
 extend type Query {

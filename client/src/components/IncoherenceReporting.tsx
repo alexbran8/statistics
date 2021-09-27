@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form'
 import { Form } from 'react-bootstrap'
 
 const SAVE_DATA = gql`
-mutation ($data: [Incoherence] $dataSub: [IncoherencesSub], $week: String!) {
+mutation ($data: [Incoherence], $dataSub: [IncoherencesSub], $week: String!) {
     saveData (data:$data, dataSub: $dataSub, week:$week){
         success
         message
@@ -123,7 +123,6 @@ const IncoherenceReporting = () => {
 
   const sendData = (data) => {
     var that = this;
-    setFileData(data)
     // get data by categories
     autoConvertMapToObject(splitCount(data["data2G"]), "2G")
     autoConvertMapToObject(splitCount(data["data3G"]), "3G")
@@ -132,6 +131,10 @@ const IncoherenceReporting = () => {
     .concat(autoConvertMapToObject(splitCount(data["data3G"]), "3G"), autoConvertMapToObject(splitCount(data["data4G"]), "4G"))
     // .groupBy("incoherence")
     setDataCat(merged)
+    delete data["data2G"]
+    delete data["data3G"]
+    delete data["data4G"]
+    setFileData(data)
     // .map(_.spread(_.merge))
     // .value();
   
@@ -145,7 +148,7 @@ const IncoherenceReporting = () => {
 
   const saveData = () => {
     saveDataMutation({
-      variables: { week: selectedWeek,  data: fileData }
+      variables: { week: selectedWeek, dataSub:dataCat, data: fileData }
     })
   }
 
