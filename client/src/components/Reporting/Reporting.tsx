@@ -111,7 +111,7 @@ const lineChartData = {
           stack: 2
         },
         {
-          label: "Cellules demontees, mais presentes en BDR ou RR",
+          label: "Cellules démontées, mais encore présentes en BDE",
           yAxisID: 'B',
           backgroundColor: "orange",
           data: thirdCat,
