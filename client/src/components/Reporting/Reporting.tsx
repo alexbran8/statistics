@@ -143,7 +143,10 @@ const lineChartData = {
           title: {
             display: true,
             text: '%'
-          }
+          },
+          
+            beginAtZero: true,
+            suggestedMax: 6          
         },
         B: {
           type: 'linear',
