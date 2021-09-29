@@ -8,6 +8,7 @@ import moment from "moment";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import "./Reporting.scss"
+import { extendSchemaImpl } from "graphql/utilities/extendSchema";
 
 const GET_REPORTING = gql`
 query ($startDate:String!, $endDate:String!) {
@@ -24,9 +25,9 @@ query ($startDate:String!, $endDate:String!) {
 
 
 const Reporting = () => {
-    const [startDate, setStartDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
+    const [endDate, setEndDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
   const currentDate = moment().format("YYYY-MM-DD")
-  const [endDate, setEndDate] = useState(moment(new Date(currentDate) - ((24 * 60 * 60 * 1000) * 5)).format("YYYY-MM-DD"));
+  const [startDate, setStartDate] = useState(moment(new Date(currentDate) - ((24 * 60 * 60 * 1000) * 5)).format("YYYY-MM-DD"));
   const [allCheck, setAllCheck] = useState(false);
 
   const [dateAxis, setdateAxis] = useState();
@@ -61,7 +62,9 @@ const Reporting = () => {
   const {data, loading, error, refetch } = useQuery(GET_REPORTING, {
     variables: { startDate:startDate , endDate:endDate }, onCompleted: (
     ) => {
-      // setEtatData(data.refreshReporting)
+      console.log(startDate)
+      setEtatData(data.refreshReporting)
+      console.log('x')
       data && data.refreshReporting ? setFirstCat(getCat(data.refreshReporting)) : null
       console.log(firstCat)
       data && data.refreshReporting ? calcData(data.refreshReporting,getCat(data.refreshReporting)) : null
@@ -101,6 +104,7 @@ const lineChartData = {
           yAxisID: 'B',
           backgroundColor: "red",
           data: firstCat,
+          barThickness : '100',
           stack: 2
         },
         {
@@ -108,6 +112,7 @@ const lineChartData = {
           yAxisID: 'B',
           backgroundColor: "green",
           data: secondCat,
+          barThickness : '100',
           stack: 2
         },
         {
@@ -115,6 +120,7 @@ const lineChartData = {
           yAxisID: 'B',
           backgroundColor: "orange",
           data: thirdCat,
+          barThickness : '100',
           stack: 2
         }
 
@@ -243,7 +249,7 @@ const lineChartData = {
 
   
   const onSubmit = (data) => {
-    refetch();
+    refetch;
     // apiService.graphql({
     //   query: GET_REPORTING,
     //   variables: { startDate: data.startDate, endDate: data.endDate },
@@ -267,17 +273,19 @@ const lineChartData = {
       <Form className="reportingForm" onSubmit={handleSubmit(onSubmit)}>
         <Form.Group controlId="new">
           {/* <Form.Label aria-invalid={errors.date ? "true" : "false"}>Start Date</Form.Label> */}
-          <Form.Control type="date" name="endDate" dateformat="MM-DD-YY" onChange={(e) => { setStartDate(e.target.value) }} defaultValue={endDate} 
+          <Form.Control type="date" name="endDate" dateformat="MM-DD-YY"  defaultValue={startDate} 
         //   ref={register({ required: true })} 
         {...register('startDate')}
+        onChange={(e) => { setStartDate(e.target.value) }}
           />
           {/* {errors.date && errors.date.type === "required" && ( */}
             {/* <span role="alert">This is required</span> */}
           {/* )} */}
           {/* <Form.Label aria-invalid={errors.date ? "true" : "false"}>End Date</Form.Label> */}
-          <Form.Control type="date" name="startDate" dateformat="DD-MM-YY" onChange={(e) => { setEndDate(e.target.value) }} defaultValue={currentDate} 
+          <Form.Control type="date" name="startDate" dateformat="DD-MM-YY" defaultValue={currentDate} 
         //   ref={register({ required: true })} 
         {...register('endDate')}
+        onChange={(e) => { setEndDate(e.target.value) }} 
           />
           {/* {errors.date && errors.date.type === "required" && (
             <span role="alert">This is required</span>

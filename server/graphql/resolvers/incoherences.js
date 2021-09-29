@@ -14,18 +14,19 @@ module.exports = {
   Query: {
     async refreshReporting(root, args, context) {
       console.log(args)
-      const start = new Date(args.startDate)
+      const start = new Date(args.startDate ) 
+      const end = new Date(args.endDate ) 
       console.log(start)
       // return etat_reporting.objects.filter(Date__range=(endDate,startDate)).order_by('Date').all()
       let result = await db.EtatReporting.findAll({
         where:{ Date: {
-          [Op.between]: [args.endDate, args.startDate],
+          [Op.between]: [start,end],
          },
         },
         order: [
           ['Date', 'ASC'],
       ],});
-      console.log(result)
+      
       return result;
     },
 
