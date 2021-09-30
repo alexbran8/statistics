@@ -41,6 +41,12 @@ const GET_ALL = gql`
         week
         technology
     }
+    getAllSubCat(first:10)  {
+      values
+      week
+      technology
+      incoherence
+  }
   }
 `;
 
@@ -79,12 +85,35 @@ const IncoherenceReporting = () => {
   const [firstCat, set2G] = useState();
   const [secondCat, set3G] = useState();
   const [thirdCat, set4G] = useState();
+  const [_2GSubCat, set2GSubCat] = useState();
+  const [subCatData, setsubCatData] = useState();
   const [dateAxis,setdateAxis] = useState();
+
+
+  const getSubCatData = (data) => {
+    console.log('data',data)
+    return data.map((s, index) => {
+      return {
+        label: s.incoherence,
+        data: [s.values],
+        type: 'bar',
+           stack: 'stack1',
+           color: '#1f77b4',
+          yAxisID: 'A',
+          xAxisID: 'X',
+          fill: false,
+        // backgroundColor: this.props.backgroundColors[index],
+        // borderColor: this.props.borderColor[index],
+        borderWidth: 2
+      };
+    });
+  };
 
   const { data, loading, error, refetch } = useQuery(GET_ALL, {
     variables: { first: 10 }, onCompleted: (
     ) => {
-
+      console.log('subcatData',getSubCatData(data.getAllSubCat))
+      setsubCatData(getSubCatData(data.getAllSubCat))
       var total = []
       // get all incoherences
       data.getAll.reduce(function (res, value) {
@@ -186,28 +215,28 @@ const IncoherenceReporting = () => {
     data: {
       labels: dateAxis,
       datasets: [
-        // {
-        //   type: 'bar',
-        //   label: '2G',
-        //   stack: 'stack1',
-        //   data: firstCat,
-        //   yAxisID: 'A',
-        //   fill: true,
-        //   // color: 'red',
-        //   // backgroundColor: 'blue',
-        //   // backgroundColor: "rgba(75,192,192,0.2)",
-        //   borderColor: 'rgb(54, 162, 235)',
-        //   borderWidth: 2,
-        //   datalabels: {
-        //     color: 'black',
-        //     font: 'bold',
-        //     align: "top",
-        //     // backgroundColor: 'blue',
-        //     // borderColor: 'rgb(54, 162, 235)',
-        //     borderWidth: 2
-        //   }
+        {
+          type: 'bar',
+          label: '2G',
+          stack: 'stack1',
+          data: _2GSubCat,
+          yAxisID: 'A',
+          fill: true,
+          // color: 'red',
+          // backgroundColor: 'blue',
+          // backgroundColor: "rgba(75,192,192,0.2)",
+          borderColor: 'rgb(54, 162, 235)',
+          borderWidth: 2,
+          datalabels: {
+            color: 'black',
+            font: 'bold',
+            align: "top",
+            // backgroundColor: 'blue',
+            // borderColor: 'rgb(54, 162, 235)',
+            borderWidth: 2
+          }
   
-        // },
+        },
         // {
         //   type: 'bar',
         //   label: '3G',
@@ -244,70 +273,70 @@ const IncoherenceReporting = () => {
         //   }
   
         // },
-        {
-          type: 'bar',
-          label: '2G',
-          stack: 'stack1',
-          data: firstCat,
-          yAxisID: 'A',
-          xAxisID: 'X',
-          fill: true,
-          barThickness : '200',
-          color: 'red',
-          backgroundColor: 'blue',
-          // backgroundColor: "rgba(75,192,192,0.2)",
-          borderColor: 'blue',
-          borderWidth: 2,
-          datalabels: {
-            color: 'white',
-            font: 'bold',
-            align: "top",
-            // backgroundColor: 'blue',
-            // borderColor: 'rgb(54, 162, 235)',
-            borderWidth: 2
-          }
+        // {
+        //   type: 'bar',
+        //   label: '2G',
+        //   stack: 'stack1',
+        //   data: firstCat,
+        //   yAxisID: 'A',
+        //   xAxisID: 'X',
+        //   fill: true,
+        //   barThickness : '200',
+        //   color: 'red',
+        //   backgroundColor: 'blue',
+        //   backgroundColor: "rgba(75,192,192,0.2)",
+        //   borderColor: 'blue',
+        //   borderWidth: 2,
+        //   datalabels: {
+        //     color: 'white',
+        //     font: 'bold',
+        //     align: "top",
+        //     backgroundColor: 'blue',
+        //     borderColor: 'rgb(54, 162, 235)',
+        //     borderWidth: 2
+        //   }
   
-        },
-        {
-          type: 'bar',
-          label: '3G',
-          data: secondCat,
-          stack: 'stack1',
-          color: '#1f77b4',
-          yAxisID: 'A',
-          xAxisID: 'X',
-          fill: false,
-          barThickness : '200',
-          backgroundColor: 'red',
-          borderColor: 'red',
-          borderWidth: 2,
-          datalabels: {
-            color: 'white ',
-            font: 'bold',
-            // backgroundColor: 'black',
-            align: "top",
-          }
-        },
-        {
-          type: 'bar',
-          label: '4G',
-          color: 'red',
-          stack: 'stack1',
-          data: thirdCat,
-          yAxisID: 'A',
-          xAxisID: 'X',
-          fill: false,
-          backgroundColor: 'green',
-          borderColor: 'green',
-          barThickness : '200',
-          borderWidth: 2,
-          // datalabels: {
-          //   color: 'black',
-          //   font: 'bold',
-          // align: 'top'
-          // }
+        // },
+        // {
+        //   type: 'bar',
+        //   label: '3G',
+        //   data: secondCat,
+        //   stack: 'stack1',
+        //   color: '#1f77b4',
+        //   yAxisID: 'A',
+        //   xAxisID: 'X',
+        //   fill: false,
+        //   barThickness : '200',
+        //   backgroundColor: 'red',
+        //   borderColor: 'red',
+        //   borderWidth: 2,
+        //   datalabels: {
+        //     color: 'white ',
+        //     font: 'bold',
+        //     backgroundColor: 'black',
+        //     align: "top",
+        //   }
+        // },
+        // {
+        //   type: 'bar',
+        //   label: '4G',
+        //   color: 'red',
+        //   stack: 'stack1',
+        //   data: thirdCat,
+        //   yAxisID: 'A',
+        //   xAxisID: 'X',
+        //   fill: false,
+        //   backgroundColor: 'green',
+        //   borderColor: 'green',
+        //   barThickness : '200',
+        //   borderWidth: 2,
+        //   datalabels: {
+        //     color: 'black',
+        //     font: 'bold',
+        //   align: 'top'
+        //   }
   
-        },
+        // },
         // {
         //   label: "Cellules presentes en BDR ou RR uniquement",
         //   yAxisID: 'B',
@@ -476,14 +505,14 @@ const IncoherenceReporting = () => {
         </Form.Group>
         <button type="submit" disabled={allCheck} className="centerBtn btn btn-success">Refresh</button>
       </Form>
-      <Bar
-        data={lineChartData.data}
+      {subCatData ? <Bar
+        data={{   labels: dateAxis, datasets: subCatData}}
         options={lineChartData.options}
         plugins={[ChartDataLabels]}
         height={0}
         width={250}
       //  options={} 
-      />
+      /> : null }
     </div>
     <ExcelReader
       setShowModal={() => setShowUploadModal(!showUploadModal)}

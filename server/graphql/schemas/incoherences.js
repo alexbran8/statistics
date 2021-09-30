@@ -32,12 +32,20 @@ input Incoherence {
     technology: String
   }
 
+  type IncoherenceSubModel {
+    values: Int
+    week: String
+    technology: String
+    incoherence: String
+  }
+
 extend type Mutation {
   saveData (data: [Incoherence], dataSub: [IncoherencesSub], week: String!):Response!
 }
 
 extend type Query {
   getAll (first:Int!):[IncoherenceModel]
+  getAllSubCat (first:Int!):[IncoherenceSubModel]
   refreshReporting(startDate:String! endDate:String!):[Etat]
 }
 `;

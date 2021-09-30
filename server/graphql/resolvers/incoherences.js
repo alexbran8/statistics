@@ -41,6 +41,18 @@ module.exports = {
       console.log(result[0])
 
       return result;
+    },
+    async getAllSubCat(root, args, context) {
+      let result = await db.IncoherencesCat.findAll({
+        // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
+        limit: args.first,
+        order: [
+          ['week', 'ASC'],
+      ],
+      });
+      console.log(result[0])
+
+      return result;
 
     }
   },
