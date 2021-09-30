@@ -55,8 +55,12 @@ const Reporting = () => {
   const [RRUEnExploatation, setRRUEnExploatation] = useState();
   const [RRUNonExploatation, setRRUNonExploatation] = useState();
   const [RRUBlank, setRRUBlank] = useState();
+  const [maxLeftAxis, setMaxLeftAxis] =useState(90)
+  const [minLeftAxis, setMinLeftAxis] =useState(50)
 
   const [etatData, setEtatData] = useState();
+
+  console.log(typeof maxLeftAxis)
 
 
   const {data, loading, error, refetch } = useQuery(GET_REPORTING, {
@@ -145,8 +149,15 @@ const lineChartData = {
             text: '%'
           },
           
-            beginAtZero: true,
-            suggestedMax: 6          
+            // beginAtZero: true,
+            // suggestedMax: 6,   
+            // suggestedMin: 20,
+            min: minLeftAxis > 0 ? minLeftAxis : 100,
+            max: maxLeftAxis > 0 ? maxLeftAxis : 100,
+            ticks: {
+              min: 50,
+              // min: 1000
+            }
         },
         B: {
           type: 'linear',
@@ -196,7 +207,7 @@ const lineChartData = {
     let secondCatData = secondCat.map(function (a) { return a.count; })
     setSecondCat(secondCatData)
 
-    var sum = [...secondCat].map((e, i) => ( e.count / (secondArray[i] + thirdCat[i].count)).toFixed(2));
+    var sum = [...secondCat].map((e, i) => ( e.count / (e.count + secondArray[i] + thirdCat[i].count)*100).toFixed(2));
     setFourthCat(sum)
 
 
@@ -275,26 +286,49 @@ const lineChartData = {
       <h1 className='title'>New Reporting Feature </h1>
       <Form className="reportingForm" onSubmit={handleSubmit(onSubmit)}>
         <Form.Group controlId="new">
-          {/* <Form.Label aria-invalid={errors.date ? "true" : "false"}>Start Date</Form.Label> */}
+          <Form.Label 
+          // aria-invalid={errors.date ? "true" : "false"}
+          >Start Date
           <Form.Control type="date" name="endDate" dateformat="MM-DD-YY"  defaultValue={startDate} 
         //   ref={register({ required: true })} 
         {...register('startDate')}
         onChange={(e) => { setStartDate(e.target.value) }}
           />
+          </Form.Label>
           {/* {errors.date && errors.date.type === "required" && ( */}
             {/* <span role="alert">This is required</span> */}
           {/* )} */}
           {/* <Form.Label aria-invalid={errors.date ? "true" : "false"}>End Date</Form.Label> */}
+          <Form.Label 
+          // aria-invalid={errors.date ? "true" : "false"}
+          >End Date
           <Form.Control type="date" name="startDate" dateformat="DD-MM-YY" defaultValue={currentDate} 
         //   ref={register({ required: true })} 
         {...register('endDate')}
         onChange={(e) => { setEndDate(e.target.value) }} 
           />
+          </Form.Label>
+          <Form.Label 
+          // aria-invalid={errors.date ? "true" : "false"}
+          >Min Left Axis
+         <Form.Control type="numeric" defaultValue={minLeftAxis} 
+        onChange={(e) => { setMinLeftAxis(parseInt(e.target.value)) }} 
+          />
+          </Form.Label>
+          <Form.Label 
+          // aria-invalid={errors.date ? "true" : "false"}
+          >Max Left Axis
+          <Form.Control type="numeric" defaultValue={maxLeftAxis} 
+        //   ref={register({ required: true })} 
+        // {...register('endDate')}
+        onChange={(e) => { setMaxLeftAxis(parseInt(e.target.value)) }} 
+          />
+          </Form.Label>
           {/* {errors.date && errors.date.type === "required" && (
             <span role="alert">This is required</span>
           )} */}
         </Form.Group>
-        <button type="submit" disabled={allCheck} className="centerBtn btn btn-success">Refresh</button>
+        {/* <button type="submit" disabled={allCheck} className="centerBtn btn btn-success">Refresh</button> */}
       </Form> 
 
      <Bar
