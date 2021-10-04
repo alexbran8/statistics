@@ -89,31 +89,62 @@ const IncoherenceReporting = () => {
   const [subCatData, setsubCatData] = useState();
   const [dateAxis,setdateAxis] = useState();
 
+  
 
-  const getSubCatData = (data) => {
-    console.log('data',data)
-    return data.map((s, index) => {
-      return {
-        label: s.incoherence,
-        data: [s.values],
+
+  const getSubCatData = (data, tech) => {
+  
+    const object = {}
+    var groupBy = function(xs, key) {
+      return xs.reduce(function(rv, x) {
+        (rv[x[key]] = rv[x[key]] || []).push(x);
+        return rv;
+      }, {});
+    };
+    
+    var groupedby = groupBy(data.filter(x => x.technology == tech), 'incoherence');
+    const map = Object.keys(groupedby).map(s => {
+      // console.log(s, groupedby[s].map(x => object.push({'values': x.values})
+      
+      return { 
+        label: s,
+        data: groupedby[s].map(x => x.values),
         type: 'bar',
-           stack: 'stack1',
-           color: '#1f77b4',
-          yAxisID: 'A',
-          xAxisID: 'X',
-          fill: false,
-        // backgroundColor: this.props.backgroundColors[index],
-        // borderColor: this.props.borderColor[index],
-        borderWidth: 2
-      };
-    });
+        stack: 'stack1',
+        //        color: '#1f77b4',
+        //       yAxisID: 'A',
+        //       xAxisID: 'X',
+        //       fill: false,
+      }
+    })
+    return map
+    // Object.keys(groupedby).reduce(function (res, value) {
+    //   console.log('res', res, value)
+    //   return res;
+    // }, {});
+
+
+    // return data.filter(x => x.technology == tech).map((s, index) => {
+
+    //   return {
+    //     label: s.incoherence,
+    //     data: [s.values],
+    //     type: 'bar',
+    //        stack: 'stack1',
+    //        color: '#1f77b4',
+    //       yAxisID: 'A',
+    //       xAxisID: 'X',
+    //       fill: false,
+    //     // backgroundColor: this.props.backgroundColors[index],
+    //     // borderColor: this.props.borderColor[index],
+    //     borderWidth: 2
+    //   };
+    // });
   };
 
   const { data, loading, error, refetch } = useQuery(GET_ALL, {
     variables: { first: 10 }, onCompleted: (
-    ) => {
-      console.log('subcatData',getSubCatData(data.getAllSubCat))
-      setsubCatData(getSubCatData(data.getAllSubCat))
+    ) => {    
       var total = []
       // get all incoherences
       data.getAll.reduce(function (res, value) {
@@ -125,92 +156,41 @@ const IncoherenceReporting = () => {
         return res;
       }, {});
 
-      console.log(total)
-        
+      // console.log(total)
+        // console.log(data.getAll)
+        var array2G = data.getAll.filter(a => a.technology == '2G').map(function(x) {return x.values})
         var array = data.getAll.filter(a => a.technology == '2G').map(function(x) {return x.values})
-        console.log(array)
-        var div = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
-        set2G(div)
-        var array = data.getAll.filter(a => a.technology == '3G').map(function(x) {return x.values})
-        console.log(array)
-        var div = [...total].map((e, i) => ( array[i]/ e.values*100).toFixed(2));
-        set3G(div)
-        var array = data.getAll.filter(a => a.technology == '4G').map(function(x) {return x.values})
-        console.log(array)
-        var div = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
-        set4G(div)
+        // console.log(array2G)
+        // var array2G2 = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
+        // set2G(div)
+        var array3G = data.getAll.filter(a => a.technology == '3G').map(function(x) {return x.values})
+        // console.log(array)
+        // var div = [...total].map((e, i) => ( array[i]/ e.values*100).toFixed(2));
+        // set3G(div)
+        var array4G = data.getAll.filter(a => a.technology == '4G').map(function(x) {return x.values})
+        // console.log(array)
+        // var array4G = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
+        // set4G(div)
+        console.log('x', getSubCatData(data.getAllSubCat, '2G'))
+        mergeData(getSubCatData(data.getAllSubCat, '2G'), getSubCatData(data.getAllSubCat, '3G'), getSubCatData(data.getAllSubCat, '4G'), array2G, array3G, array4G, )
         var array = data.getAll.map(function(x) {return x.week})
         let unique = [...new Set(array)];
         setdateAxis(unique)
-        console.log(firstCat)  
+        // console.log(firstCat) 
+        
+       
+      // console.log(array)
+
+
+      
+
+      
     }
 });
 
 
-  
-  const date = moment().format("YYYY-MM-DD")
 
-  const sendData = (data) => {
-    var that = this;
-    // get data by categories
-    autoConvertMapToObject(splitCount(data["data2G"]), "2G")
-    autoConvertMapToObject(splitCount(data["data3G"]), "3G")
-    autoConvertMapToObject(splitCount(data["data4G"]), "4G")
-    var merged = autoConvertMapToObject(splitCount(data["data2G"]), "2G")
-    .concat(autoConvertMapToObject(splitCount(data["data3G"]), "3G"), autoConvertMapToObject(splitCount(data["data4G"]), "4G"))
-    // .groupBy("incoherence")
-    setDataCat(merged)
-    delete data["data2G"]
-    delete data["data3G"]
-    delete data["data4G"]
-    setFileData(data)
-    // .map(_.spread(_.merge))
-    // .value();
-  
-
-  }
-
-  const splitCount = (data) => {
-    const distinctItems = [...new Map(data.map(item => [item["Incoherence remonte"], data.filter(x => x["Incoherence remonte"] == item["Incoherence remonte"]).length]))];
-    return distinctItems
-  }
-
-  const saveData = () => {
-    saveDataMutation({
-      variables: { week: selectedWeek, dataSub:dataCat, data: fileData }
-    })
-  }
-
-  const onSubmit = (data) => {
-  refetch()
-    }
-
-
-    const autoConvertMapToObject = (map, technology) => {
-      const obj = [];
-      for (const item of [...map]) {
-        const [
-          key,
-          value
-        ] = item;
-        obj.push({'incoherence': key, 'value': value, 'technology': technology});
-        // obj['tehnology'] = technology
-      }
-      return obj;
-    }
-
-  const [saveDataMutation] = useMutation(SAVE_DATA, {
-    onCompleted: (dataRes) => {
-      alert(dataRes.saveData.message);
-      console.log(dataRes.saveData)
-      if (dataRes.saveData.success === 'true') {
-        setFileData(null);
-        setSelectedWeek(null)
-      }
-    },
-    onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
-  });
-
+const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
   const lineChartData = {
     data: {
       labels: dateAxis,
@@ -218,8 +198,8 @@ const IncoherenceReporting = () => {
         {
           type: 'bar',
           label: '2G',
-          stack: 'stack1',
-          data: _2GSubCat,
+          stack: 'stack2',
+          data: data2G,
           yAxisID: 'A',
           fill: true,
           // color: 'red',
@@ -227,40 +207,58 @@ const IncoherenceReporting = () => {
           // backgroundColor: "rgba(75,192,192,0.2)",
           borderColor: 'rgb(54, 162, 235)',
           borderWidth: 2,
-          datalabels: {
-            color: 'black',
-            font: 'bold',
-            align: "top",
-            // backgroundColor: 'blue',
-            // borderColor: 'rgb(54, 162, 235)',
-            borderWidth: 2
-          }
+          // datalabels: {
+          //   color: 'black',
+          //   font: 'bold',
+          //   align: "top",
+          //   // backgroundColor: 'blue',
+          //   // borderColor: 'rgb(54, 162, 235)',
+          //   borderWidth: 2
+          // }
   
         },
-        // {
-        //   type: 'bar',
-        //   label: '3G',
-        //   data: secondCat,
-        //   stack: 'stack1',
-        //   color: '#1f77b4',
-        //   yAxisID: 'A',
-        //   fill: false,
-        //   // backgroundColor: 'red',
-        //   borderColor: 'orange',
-        //   borderWidth: 2,
-        //   datalabels: {
-        //     color: 'black ',
-        //     font: 'bold',
-        //     // backgroundColor: 'black',
-        //     align: "top",
-        //   }
-        // },
+        {
+          type: 'bar',
+          label: '3G',
+          data: data3G,
+          stack: 'stack2',
+          color: '#1f77b4',
+          yAxisID: 'A',
+          fill: false,
+          // backgroundColor: 'red',
+          borderColor: 'orange',  
+          borderWidth: 2,
+          datalabels: {
+            color: 'black ',
+            font: 'bold',
+            // backgroundColor: 'black',
+            align: "top",
+          }
+        },
+        {
+          type: 'bar',
+          label: '4G',
+          data: data4G,
+          stack: 'stack2',
+          color: '#1f77b4',
+          yAxisID: 'A',
+          fill: false,
+          // backgroundColor: 'red',
+          borderColor: 'orange',  
+          borderWidth: 2,
+          datalabels: {
+            color: 'black ',
+            font: 'bold',
+            // backgroundColor: 'black',
+            align: "top",
+          }
+        },
         // {
         //   type: 'bar',
         //   label: '4G',
         //   color: 'red',
-        //   stack: 'stack1',
-        //   data: thirdCat,
+        //   stack: 'stack2',
+        //   data: data4,
         //   yAxisID: 'A',
         //   fill: false,
         //   // backgroundColor: 'green',
@@ -405,6 +403,82 @@ const IncoherenceReporting = () => {
     }
   }
 
+  
+  var mergedData = [...data1, 
+    ...data2, 
+    // ...dataSub4G,
+    // ... data2, 
+    ...lineChartData.data.datasets
+  ]
+  // console.log(mergedData)
+  setsubCatData(mergedData)
+}
+  
+  const date = moment().format("YYYY-MM-DD")
+
+  const sendData = (data) => {
+    var that = this;
+    // get data by categories
+    autoConvertMapToObject(splitCount(data["data2G"]), "2G")
+    autoConvertMapToObject(splitCount(data["data3G"]), "3G")
+    autoConvertMapToObject(splitCount(data["data4G"]), "4G")
+    var merged = autoConvertMapToObject(splitCount(data["data2G"]), "2G")
+    .concat(autoConvertMapToObject(splitCount(data["data3G"]), "3G"), autoConvertMapToObject(splitCount(data["data4G"]), "4G"))
+    // .groupBy("incoherence")
+    setDataCat(merged)
+    delete data["data2G"]
+    delete data["data3G"]
+    delete data["data4G"]
+    setFileData(data)
+    // .map(_.spread(_.merge))
+    // .value();
+  
+
+  }
+
+  const splitCount = (data) => {
+    const distinctItems = [...new Map(data.map(item => [item["Incoherence remonte"], data.filter(x => x["Incoherence remonte"] == item["Incoherence remonte"]).length]))];
+    return distinctItems
+  }
+
+  const saveData = () => {
+    saveDataMutation({
+      variables: { week: selectedWeek, dataSub:dataCat, data: fileData }
+    })
+  }
+
+  const onSubmit = (data) => {
+  refetch()
+    }
+
+
+    const autoConvertMapToObject = (map, technology) => {
+      const obj = [];
+      for (const item of [...map]) {
+        const [
+          key,
+          value
+        ] = item;
+        obj.push({'incoherence': key, 'value': value, 'technology': technology});
+        // obj['tehnology'] = technology
+      }
+      return obj;
+    }
+
+  const [saveDataMutation] = useMutation(SAVE_DATA, {
+    onCompleted: (dataRes) => {
+      alert(dataRes.saveData.message);
+      // console.log(dataRes.saveData)
+      if (dataRes.saveData.success === 'true') {
+        setFileData(null);
+        setSelectedWeek(null)
+      }
+    },
+    onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
+  });
+
+  
+
 
   const getWeek = (date) => {
 
@@ -507,7 +581,8 @@ const IncoherenceReporting = () => {
       </Form>
       {subCatData ? <Bar
         data={{   labels: dateAxis, datasets: subCatData}}
-        options={lineChartData.options}
+        // data ={lineChartData}
+        // options={lineChartData.options}
         plugins={[ChartDataLabels]}
         height={0}
         width={250}
