@@ -348,7 +348,6 @@ const IncoherenceReporting = () => {
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                console.log(val, ctx)
                 return val + "% (" + data3G[ctx.dataIndex]+')';
               },
               color: '#404040',
@@ -373,8 +372,7 @@ const IncoherenceReporting = () => {
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                console.log(val, ctx)
-                return val + "% (" + data3G[ctx.dataIndex]+')';
+                return val + "% (" + data4G[ctx.dataIndex]+')';
               },
               color: '#404040',
               // backgroundColor: '#404040'
