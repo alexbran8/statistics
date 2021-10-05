@@ -87,31 +87,45 @@ const IncoherenceReporting = () => {
   const [thirdCat, set4G] = useState();
   const [_2GSubCat, set2GSubCat] = useState();
   const [subCatData, setsubCatData] = useState();
-  const [dateAxis,setdateAxis] = useState();
+  const [dateAxis, setdateAxis] = useState();
 
-  
+
 
 
   const getSubCatData = (data, tech) => {
-  
+
     const object = {}
-    var groupBy = function(xs, key) {
-      return xs.reduce(function(rv, x) {
+    var groupBy = function (xs, key) {
+      return xs.reduce(function (rv, x) {
         (rv[x[key]] = rv[x[key]] || []).push(x);
         return rv;
       }, {});
     };
-    
+
     var groupedby = groupBy(data.filter(x => x.technology == tech), 'incoherence');
     const map = Object.keys(groupedby).map(s => {
       // console.log(s, groupedby[s].map(x => object.push({'values': x.values})
-      
-      return { 
+
+      return {
         label: s,
         data: groupedby[s].map(x => x.values),
         type: 'bar',
         stack: 'stack1',
-        //        color: '#1f77b4',
+        yAxisID: 'A',
+        color: 'red',
+        borderColor: 'red',
+        borderWidth: 2,
+        barThickness: '100',
+        // datalabels: {
+        //   display: true,
+        //   formatter: (val, ctx) => {
+        //     console.log(val, ctx)
+        //     return ctx.dataset.label +'-'+ val;
+        //   },
+        //   color: '#fff',
+        //   backgroundColor: '#404040'
+        // },
+        // xAxisID: 'X',
         //       yAxisID: 'A',
         //       xAxisID: 'X',
         //       fill: false,
@@ -142,12 +156,27 @@ const IncoherenceReporting = () => {
     // });
   };
 
+  const sortArrayOfObjsByKey = (array, key, ascdesc) =>
+  array.sort((a, b) => {
+    const x = a[key];
+    const y = b[key];
+    if (ascdesc === 'asc') {
+      return x < y ? -1 : x > y ? 1 : 0;
+    }
+    if (ascdesc === 'desc') {
+      return x > y ? -1 : x < y ? 1 : 0;
+    }
+    return null;
+  });
+
   const { data, loading, error, refetch } = useQuery(GET_ALL, {
     variables: { first: 10 }, onCompleted: (
-    ) => {    
+    ) => {
       var total = []
       // get all incoherences
-      data.getAll.reduce(function (res, value) {
+      let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
+      console.log(sortedArray)
+      sortedArray.reduce(function (res, value) {
         if (!res[value.week]) {
           res[value.week] = { week: value.week, values: 0 };
           total.push(res[value.week])
@@ -157,236 +186,103 @@ const IncoherenceReporting = () => {
       }, {});
 
       // console.log(total)
-        // console.log(data.getAll)
-        var array2G = data.getAll.filter(a => a.technology == '2G').map(function(x) {return x.values})
-        var array = data.getAll.filter(a => a.technology == '2G').map(function(x) {return x.values})
-        // console.log(array2G)
-        // var array2G2 = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
-        // set2G(div)
-        var array3G = data.getAll.filter(a => a.technology == '3G').map(function(x) {return x.values})
-        // console.log(array)
-        // var div = [...total].map((e, i) => ( array[i]/ e.values*100).toFixed(2));
-        // set3G(div)
-        var array4G = data.getAll.filter(a => a.technology == '4G').map(function(x) {return x.values})
-        // console.log(array)
-        // var array4G = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
-        // set4G(div)
-        console.log('x', getSubCatData(data.getAllSubCat, '2G'))
-        mergeData(getSubCatData(data.getAllSubCat, '2G'), getSubCatData(data.getAllSubCat, '3G'), getSubCatData(data.getAllSubCat, '4G'), array2G, array3G, array4G, )
-        var array = data.getAll.map(function(x) {return x.week})
-        let unique = [...new Set(array)];
-        setdateAxis(unique)
-        // console.log(firstCat) 
-        
-       
+      // console.log(data.getAll)
+      var array2G = sortedArray.filter(a => a.technology == '2G').map(function (x) { return x.values })
+
+
+      // console.log(array2G)
+      // var array2G2 = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
+      // set2G(div)
+      var array3G = sortedArray.filter(a => a.technology == '3G').map(function (x) { return x.values })
+      // console.log(array)
+      // var div = [...total].map((e, i) => ( array[i]/ e.values*100).toFixed(2));
+      // set3G(div)
+      var array4G = sortedArray.filter(a => a.technology == '4G').map(function (x) { return x.values })
+      // console.log(array)
+      // var array4G = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
+      // set4G(div)
+      var array2G_percentage = array2G.map(function (x, i) { return (100 * x / (x + array3G[i] + array4G[i])).toFixed(2) })
+      var array3G_percentage = array3G.map(function (x, i) { return (100 * x / (x + array2G[i] + array4G[i])).toFixed(2) })
+      var array4G_percentage = array4G.map(function (x, i) { return (100 * x / (x + array3G[i] + array2G[i])).toFixed(2) })
+      
+      mergeData(
+        getSubCatData(data.getAllSubCat, '2G'), getSubCatData(data.getAllSubCat, '3G'), getSubCatData(data.getAllSubCat, '4G'),
+        array2G_percentage, array3G_percentage, array4G_percentage,
+        array2G,
+        array3G,
+        array4G
+      )
+      var array = sortedArray.map(function (x) { return x.week })
+      let unique = [...new Set(array)];
+      setdateAxis(unique)
+      // console.log(firstCat) 
+
+
       // console.log(array)
 
 
-      
 
-      
+
+
     }
-});
+  });
 
-
-
-const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
-  const lineChartData = {
-    data: {
-      labels: dateAxis,
-      datasets: [
-        {
-          type: 'bar',
-          label: '2G',
-          stack: 'stack2',
-          data: data2G,
-          yAxisID: 'A',
-          fill: true,
-          // color: 'red',
-          // backgroundColor: 'blue',
-          // backgroundColor: "rgba(75,192,192,0.2)",
-          borderColor: 'rgb(54, 162, 235)',
-          borderWidth: 2,
-          // datalabels: {
-          //   color: 'black',
-          //   font: 'bold',
-          //   align: "top",
-          //   // backgroundColor: 'blue',
-          //   // borderColor: 'rgb(54, 162, 235)',
-          //   borderWidth: 2
-          // }
-  
-        },
-        {
-          type: 'bar',
-          label: '3G',
-          data: data3G,
-          stack: 'stack2',
-          color: '#1f77b4',
-          yAxisID: 'A',
-          fill: false,
-          // backgroundColor: 'red',
-          borderColor: 'orange',  
-          borderWidth: 2,
-          datalabels: {
-            color: 'black ',
-            font: 'bold',
-            // backgroundColor: 'black',
-            align: "top",
-          }
-        },
-        {
-          type: 'bar',
-          label: '4G',
-          data: data4G,
-          stack: 'stack2',
-          color: '#1f77b4',
-          yAxisID: 'A',
-          fill: false,
-          // backgroundColor: 'red',
-          borderColor: 'orange',  
-          borderWidth: 2,
-          datalabels: {
-            color: 'black ',
-            font: 'bold',
-            // backgroundColor: 'black',
-            align: "top",
-          }
-        },
-        // {
-        //   type: 'bar',
-        //   label: '4G',
-        //   color: 'red',
-        //   stack: 'stack2',
-        //   data: data4,
-        //   yAxisID: 'A',
-        //   fill: false,
-        //   // backgroundColor: 'green',
-        //   borderColor: 'green',
-        //   borderWidth: 2,
-        //   datalabels: {
-        //     color: 'black',
-        //     font: 'bold',
-        //   align: 'top'
-        //   }
-  
-        // },
-        // {
-        //   type: 'bar',
-        //   label: '2G',
-        //   stack: 'stack1',
-        //   data: firstCat,
-        //   yAxisID: 'A',
-        //   xAxisID: 'X',
-        //   fill: true,
-        //   barThickness : '200',
-        //   color: 'red',
-        //   backgroundColor: 'blue',
-        //   backgroundColor: "rgba(75,192,192,0.2)",
-        //   borderColor: 'blue',
-        //   borderWidth: 2,
-        //   datalabels: {
-        //     color: 'white',
-        //     font: 'bold',
-        //     align: "top",
-        //     backgroundColor: 'blue',
-        //     borderColor: 'rgb(54, 162, 235)',
-        //     borderWidth: 2
-        //   }
-  
-        // },
-        // {
-        //   type: 'bar',
-        //   label: '3G',
-        //   data: secondCat,
-        //   stack: 'stack1',
-        //   color: '#1f77b4',
-        //   yAxisID: 'A',
-        //   xAxisID: 'X',
-        //   fill: false,
-        //   barThickness : '200',
-        //   backgroundColor: 'red',
-        //   borderColor: 'red',
-        //   borderWidth: 2,
-        //   datalabels: {
-        //     color: 'white ',
-        //     font: 'bold',
-        //     backgroundColor: 'black',
-        //     align: "top",
-        //   }
-        // },
-        // {
-        //   type: 'bar',
-        //   label: '4G',
-        //   color: 'red',
-        //   stack: 'stack1',
-        //   data: thirdCat,
-        //   yAxisID: 'A',
-        //   xAxisID: 'X',
-        //   fill: false,
-        //   backgroundColor: 'green',
-        //   borderColor: 'green',
-        //   barThickness : '200',
-        //   borderWidth: 2,
-        //   datalabels: {
-        //     color: 'black',
-        //     font: 'bold',
-        //   align: 'top'
-        //   }
-  
-        // },
-        // {
-        //   label: "Cellules presentes en BDR ou RR uniquement",
-        //   yAxisID: 'B',
-        //   backgroundColor: "red",
-        //   data: firstCat,
-        //   stack: 2
-        // },
-        // {
-        //   label: "Cellules demontees, mais presentes en BDR ou RR",
-        //   yAxisID: 'B',
-        //   backgroundColor: "orange",
-        //   data: secondCat,
-        //   stack: 2
-        // },
-        // {
-        //   label: "Cellules normales",
-        //   yAxisID: 'B',
-        //   backgroundColor: "green",
-        //   data: thirdCat,
-        //   stack: 2
-        // }
-  
-      ],
-    },
+  const lineChartData =
+  {
     options: {
       xAxes: [{
-        stacked: true,
-        barPercentage: 0.4
+        stacked: false,
+        offset: true,
+        barPercentage: 0.9
       }],
       yAxes: [{
-        stacked: true
-    }],
+        stacked: false
+      }],
       plugins: {
-        datalabels: {
-          color: 'white',
-          font: {
-            // weight: 'bold',
-            size: 14
-          }
-        }
+        // datalabels: {
+        //   display: true,
+        //   formatter: (val, ctx) => {
+        //     return ctx.chart.data.labels[ctx.dataIndex];
+        //   },
+        //   color: '#fff',
+        //   backgroundColor: '#404040'
+        // },
+        // datalabels: {
+        //   formatter: (value) => {
+        //     return value + '%';
+        //   },
+        //   display: true,
+        //   color: 'red',
+        //   font: {
+        //     weight: 'bold',
+        //     size: 14
+        //   },
+        //   labels: {
+        //     title: {
+        //       font: {
+        //         weight: 'bold'
+        //       }
+        //     },
+        //     value: {
+        //       color: 'green'
+        //     },
+        //   }
+        // }
       },
       scales: {
         A: {
           type: 'linear',
           position: 'left',
           stacked: true,
+          // ticks: {
+          //   autoSkip: false
+          // },
           title: {
             display: true,
-            text: '%'
-          }
+            text: '% du total'
+          },
         },
-        
+
         // B: {
         //   type: 'linear',
         //   position: 'right',
@@ -403,17 +299,208 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
     }
   }
 
-  
-  var mergedData = [...data1, 
-    ...data2, 
-    // ...dataSub4G,
-    // ... data2, 
-    ...lineChartData.data.datasets
-  ]
-  // console.log(mergedData)
-  setsubCatData(mergedData)
-}
-  
+  const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, data4GPercentage, data2G, data3G, data4G) => {
+    const lineChartData = {
+      data: {
+        labels: dateAxis,
+        datasets: [
+          {
+            type: 'bar',
+            label: '2G',
+            stack: 'stack1',
+            data: data2GPercentage,
+            yAxisID: 'A',
+            // fill: true,
+            xAxisID: 'X',
+            barThickness: '80',
+            color: 'red',
+            backgroundColor: 'red',
+            // backgroundColor: "rgba(75,192,192,0.2)",
+            borderColor: 'red',
+            borderWidth: 2,
+            datalabels: {
+              display: true,
+              align: "top",
+              anchor: "end",
+              formatter: (val, ctx) => {
+                return val + "% (" + data2G[ctx.dataIndex]+')';
+              },
+              color: '#404040',
+              // backgroundColor: '#404040'
+            },
+
+          },
+          {
+            type: 'bar',
+            label: '3G',
+            data: data3GPercentage,
+            stack: 'stack2',
+            color: '#1f77b4',
+            yAxisID: 'A',
+            fill: false,
+            xAxisID: 'X',
+            backgroundColor: 'blue',
+            borderColor: 'blue',
+            borderWidth: 2,
+            barThickness: '80',
+            datalabels: {
+              display: true,
+              align: "top",
+              anchor: "end",
+              formatter: (val, ctx) => {
+                console.log(val, ctx)
+                return val + "% (" + data3G[ctx.dataIndex]+')';
+              },
+              color: '#404040',
+              // backgroundColor: '#404040'
+            },
+          },
+          {
+            type: 'bar',
+            label: '4G',
+            data: data4GPercentage,
+            stack: 'stack3',
+            color: '#1f77b4',
+            yAxisID: 'A',
+            fill: false,
+            xAxisID: 'X',
+            backgroundColor: 'green',
+            borderColor: 'green',
+            barThickness: '80',
+            borderWidth: 2,
+            datalabels: {
+              display: true,
+              align: "top",
+              anchor: "end",
+              formatter: (val, ctx) => {
+                console.log(val, ctx)
+                return val + "% (" + data3G[ctx.dataIndex]+')';
+              },
+              color: '#404040',
+              // backgroundColor: '#404040'
+            },
+          },
+          // {
+          //   type: 'bar',
+          //   label: '4G',
+          //   color: 'red',
+          //   stack: 'stack2',
+          //   data: data4,
+          //   yAxisID: 'A',
+          //   fill: false,
+          //   // backgroundColor: 'green',
+          //   borderColor: 'green',
+          //   borderWidth: 2,
+          //   datalabels: {
+          //     color: 'black',
+          //     font: 'bold',
+          //   align: 'top'
+          //   }
+
+          // },
+          // {
+          //   type: 'bar',
+          //   label: '2G',
+          //   stack: 'stack1',
+          //   data: firstCat,
+          //   yAxisID: 'A',
+          //   xAxisID: 'X',
+          //   fill: true,
+          //   barThickness : '200',
+          //   color: 'red',
+          //   backgroundColor: 'blue',
+          //   backgroundColor: "rgba(75,192,192,0.2)",
+          //   borderColor: 'blue',
+          //   borderWidth: 2,
+          //   datalabels: {
+          //     color: 'white',
+          //     font: 'bold',
+          //     align: "top",
+          //     backgroundColor: 'blue',
+          //     borderColor: 'rgb(54, 162, 235)',
+          //     borderWidth: 2
+          //   }
+
+          // },
+          // {
+          //   type: 'bar',
+          //   label: '3G',
+          //   data: secondCat,
+          //   stack: 'stack1',
+          //   color: '#1f77b4',
+          //   yAxisID: 'A',
+          //   xAxisID: 'X',
+          //   fill: false,
+          //   barThickness : '200',
+          //   backgroundColor: 'red',
+          //   borderColor: 'red',
+          //   borderWidth: 2,
+          //   datalabels: {
+          //     color: 'white ',
+          //     font: 'bold',
+          //     backgroundColor: 'black',
+          //     align: "top",
+          //   }
+          // },
+          // {
+          //   type: 'bar',
+          //   label: '4G',
+          //   color: 'red',
+          //   stack: 'stack1',
+          //   data: thirdCat,
+          //   yAxisID: 'A',
+          //   xAxisID: 'X',
+          //   fill: false,
+          //   backgroundColor: 'green',
+          //   borderColor: 'green',
+          //   barThickness : '200',
+          //   borderWidth: 2,
+          //   datalabels: {
+          //     color: 'black',
+          //     font: 'bold',
+          //   align: 'top'
+          //   }
+
+          // },
+          // {
+          //   label: "Cellules presentes en BDR ou RR uniquement",
+          //   yAxisID: 'B',
+          //   backgroundColor: "red",
+          //   data: firstCat,
+          //   stack: 2
+          // },
+          // {
+          //   label: "Cellules demontees, mais presentes en BDR ou RR",
+          //   yAxisID: 'B',
+          //   backgroundColor: "orange",
+          //   data: secondCat,
+          //   stack: 2
+          // },
+          // {
+          //   label: "Cellules normales",
+          //   yAxisID: 'B',
+          //   backgroundColor: "green",
+          //   data: thirdCat,
+          //   stack: 2
+          // }
+
+        ],
+      },
+
+    }
+
+
+    var mergedData = [
+      // ...data1, 
+      // ...data2, 
+      // ...dataSub4G,
+      // ... data2, 
+      ...lineChartData.data.datasets
+    ]
+    // console.log(mergedData)
+    setsubCatData(mergedData)
+  }
+
   const date = moment().format("YYYY-MM-DD")
 
   const sendData = (data) => {
@@ -423,7 +510,7 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
     autoConvertMapToObject(splitCount(data["data3G"]), "3G")
     autoConvertMapToObject(splitCount(data["data4G"]), "4G")
     var merged = autoConvertMapToObject(splitCount(data["data2G"]), "2G")
-    .concat(autoConvertMapToObject(splitCount(data["data3G"]), "3G"), autoConvertMapToObject(splitCount(data["data4G"]), "4G"))
+      .concat(autoConvertMapToObject(splitCount(data["data3G"]), "3G"), autoConvertMapToObject(splitCount(data["data4G"]), "4G"))
     // .groupBy("incoherence")
     setDataCat(merged)
     delete data["data2G"]
@@ -432,7 +519,7 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
     setFileData(data)
     // .map(_.spread(_.merge))
     // .value();
-  
+
 
   }
 
@@ -443,27 +530,27 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
 
   const saveData = () => {
     saveDataMutation({
-      variables: { week: selectedWeek, dataSub:dataCat, data: fileData }
+      variables: { week: selectedWeek, dataSub: dataCat, data: fileData }
     })
   }
 
   const onSubmit = (data) => {
-  refetch()
-    }
+    refetch()
+  }
 
 
-    const autoConvertMapToObject = (map, technology) => {
-      const obj = [];
-      for (const item of [...map]) {
-        const [
-          key,
-          value
-        ] = item;
-        obj.push({'incoherence': key, 'value': value, 'technology': technology});
-        // obj['tehnology'] = technology
-      }
-      return obj;
+  const autoConvertMapToObject = (map, technology) => {
+    const obj = [];
+    for (const item of [...map]) {
+      const [
+        key,
+        value
+      ] = item;
+      obj.push({ 'incoherence': key, 'value': value, 'technology': technology });
+      // obj['tehnology'] = technology
     }
+    return obj;
+  }
 
   const [saveDataMutation] = useMutation(SAVE_DATA, {
     onCompleted: (dataRes) => {
@@ -477,7 +564,7 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
     onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
   });
 
-  
+
 
 
   const getWeek = (date) => {
@@ -531,10 +618,10 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
                 {dataCat && dataCat.map((item, index) => {
                   return (
                     <TableRow key={index}>
-                    <StyledTableCell>{item.incoherence}</StyledTableCell>
-                    <StyledTableCell align="right">{item.technology}</StyledTableCell>
-                    <StyledTableCell align="right">{item.value}</StyledTableCell>
-                  </TableRow>
+                      <StyledTableCell>{item.incoherence}</StyledTableCell>
+                      <StyledTableCell align="right">{item.technology}</StyledTableCell>
+                      <StyledTableCell align="right">{item.value}</StyledTableCell>
+                    </TableRow>
                   )
                 })}
 
@@ -572,22 +659,22 @@ const mergeData = (data1, data2, dataSub4G, data2G, data3G, data4G) => {
             <span role="alert">This is required</span>
           )} */}
           {/* <Form.Label aria-invalid={errors.date ? "true" : "false"}>End Week</Form.Label> */}
-          {/* <Form.Control type="text" name="endWeek"  onChange={(e) => { setEndDate(e.target.value) }}  ref={register({ required: true })} /> */} 
+          {/* <Form.Control type="text" name="endWeek"  onChange={(e) => { setEndDate(e.target.value) }}  ref={register({ required: true })} /> */}
           {/* {errors.date && errors.date.type === "required" && (
             <span role="alert">This is required</span>
           )} */}
         </Form.Group>
-        <button type="submit" disabled={allCheck} className="centerBtn btn btn-success">Refresh</button>
+        {/* <button type="submit" disabled={allCheck} className="centerBtn btn btn-success">Refresh</button> */}
       </Form>
       {subCatData ? <Bar
-        data={{   labels: dateAxis, datasets: subCatData}}
+        data={{ labels: dateAxis, datasets: subCatData }}
         // data ={lineChartData}
-        // options={lineChartData.options}
+        options={lineChartData.options}
         plugins={[ChartDataLabels]}
         height={0}
         width={250}
       //  options={} 
-      /> : null }
+      /> : null}
     </div>
     <ExcelReader
       setShowModal={() => setShowUploadModal(!showUploadModal)}

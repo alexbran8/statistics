@@ -33,9 +33,9 @@ module.exports = {
     async getAll(root, args, context) {
       let result = await db.Incoherences.findAll({
         // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
-        limit: args.first,
+        limit: args.first*3,
         order: [
-          ['week', 'ASC'],
+          ['week', 'DESC'],
       ],
       });
       console.log(result[0])
