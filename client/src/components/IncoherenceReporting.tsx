@@ -392,7 +392,7 @@ const IncoherenceReporting = () => {
           //   datalabels: {
           //     color: 'black',
           //     font: 'bold',
-          //   align: 'top'
+          //   align: 'top'6
           //   }
 
           // },
