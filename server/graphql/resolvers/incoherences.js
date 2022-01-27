@@ -31,23 +31,33 @@ module.exports = {
     },
 
     async getAll(root, args, context) {
-      let result = await db.Incoherences.findAll({
-        // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
-        limit: 15,
-        order: [
-          ['week', 'DESC'],
-      ],
-      });
-      console.log(result[0])
+      try{
+      // let result = await db.Incoherences.findAll({
+      //   where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
+      //   // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
+      //   // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
+      //   limit: 15,
+      //   order: [
+      //     ['week', 'DESC'],
+          
+      // ],
+      // });
+      let result = await db.sequelize.query('SELECT id, technology, date, week, "values" FROM public.incoherences_weekly where EXTRACT(YEAR FROM date) = 2022 order by date DESC')
+      console.log(result[0][0])
 
-      return result;
+      return result[0];
+      }
+      catch (error) {
+        console.log(error)
+      }
     },
     async getAllSubCat(root, args, context) {
       let result = await db.IncoherencesCat.findAll({
         // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
         // limit: args.first,
         order: [
-          ['week', 'ASC'],
+          ['date', 'DESC'],
+          // ['week', 'DESC'],
       ],
       });
       console.log(result[0])
