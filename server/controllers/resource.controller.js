@@ -1,7 +1,6 @@
 const { db } = require("../config/configProvider")();
 const sequelize = require("sequelize");
 const { DataTypes, Op } = sequelize;
-const User = require("../models/user")(sequelize, DataTypes);
 
 
 // Retrieve all Resources from the database.

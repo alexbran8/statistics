@@ -1,7 +1,6 @@
 const passport = require("passport");
 const AzureOAuth2Strategy = require('passport-azure-ad-oauth2')
 const keys = require("./keys");
-const User = require("../models/user-model");
 const config = require('../config/config')
 
   passport.serializeUser((profile, done) => {

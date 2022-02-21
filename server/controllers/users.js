@@ -1,7 +1,7 @@
 const JWT = require('jsonwebtoken')
 const sequelize = require('sequelize')
 const { Op, DataTypes } = sequelize
-const User = require('../models/user')(sequelize, DataTypes)
+
 const { JWT_SECRET } = require('../config/configProvider')()
 const UsersController = require('express').Router()
 const passport = require('passport')
