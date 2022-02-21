@@ -1,5 +1,5 @@
 const { newError, isNull } = require('../utils/main')
-const userModel = require('../models/user')
+
 
 const _find = async (model, _id, next) => {
   const _idc = _id || ''
