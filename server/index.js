@@ -69,12 +69,12 @@ db.sequelize
 
 // define session
 app.use(
-  session({
-    secret: 'our little secret',
-    saveUninitialized: true,
-    resave: true,
+  cookieSession({
+    name: "session",
+    keys: [keys.COOKIE_KEY],
+    maxAge: 24 * 60 * 60 * 100
   })
-);
+)
 
 
 // parse cookies
