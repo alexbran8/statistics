@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import "./Header.scss"
 import React, { useEffect, useState } from "react";
-import { config } from "../config"
+import { config } from "../../config"
 import { useSelector, useDispatch } from "react-redux";
-import { UPDATE_PROFILE, AUTH_SIGN_OUT, AUTH_ERROR } from '../redux/reducers/types'
+import { UPDATE_PROFILE, AUTH_SIGN_OUT, AUTH_ERROR } from '../../redux/reducers/types'
 import { ExitToApp, ThreeDRotation } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
-import Sidebar from "./SideBar/SideBar"
+import Sidebar from "./../SideBar/SideBar"
 
 import {
   Collapse,
@@ -17,7 +17,7 @@ import {
   UncontrolledPopover, PopoverHeader, PopoverBody
 } from 'reactstrap'
 import { withTranslation } from "react-i18next";
-import "../services/i18n";
+import "../../services/i18n";
 import LanguageSelector from "./LanguageSelector";
 import { useTranslation } from "react-i18next";
 

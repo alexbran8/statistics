@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import XLSX from 'xlsx'
+import * as XLSX from 'xlsx'
 import { Button, Modal, Container } from 'react-bootstrap'
 // import styles from '../stylesheets/home.module.css'
 import axios from 'axios'

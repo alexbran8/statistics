@@ -15,7 +15,25 @@ const Homepage = () => {
   
   
 
-    return(<h3>  {t("home.label")}</h3>)
+    return(  <div className="homeContainer">
+    <div>
+      {/* add user to redux */}
+      {!sessionStorage.getItem('userEmail') ? (
+        <h1>Welcome! Please login in order to continue...</h1>
+
+      ) : (
+        <div>
+
+
+          <h1>You have been logged in succcessfully!</h1>
+          <h2>Welcome {sessionStorage.getItem('userEmail')}!</h2>
+        </div>
+      )}
+      <div className="notification-container">
+        <h3 style={{ color: "orange" }}>Working on refactoring the authentification check once token expires so that it will refresh automatically... </h3>
+      </div>
+    </div>
+  </div>)
 
 }
 
