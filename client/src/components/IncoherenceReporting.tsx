@@ -174,7 +174,7 @@ const IncoherenceReporting = () => {
     ) => {
       var total = []
       // get all incoherences
-      let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
+      let sortedArray = data && sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
       console.log(sortedArray)
       sortedArray.reduce(function (res, value) {
         if (!res[value.week]) {

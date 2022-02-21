@@ -32,20 +32,19 @@ module.exports = {
 
     async getAll(root, args, context) {
       try{
-      // let result = await db.Incoherences.findAll({
-      //   where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
-      //   // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
-      //   // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
-      //   limit: 15,
-      //   order: [
-      //     ['week', 'DESC'],
-          
-      // ],
-      // });
-      let result = await db.sequelize.query('SELECT id, technology, date, week, "values" FROM public.incoherences_weekly where EXTRACT(YEAR FROM date) = 2022 order by date DESC')
-      console.log(result[0][0])
+      let result = await db.Incoherences.findAll({
+        // where: where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
+        // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
+        // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
+        limit: 15,
+        order: [
+          ['date', 'DESC'],
+      ],
+      });
+      // let result = await db.sequelize.query('SELECT id, technology, date, week, "values" FROM public.incoherences_weekly where EXTRACT(YEAR FROM date) = 2022 order by date DESC')
+      console.log(result)
 
-      return result[0];
+      return result;
       }
       catch (error) {
         console.log(error)

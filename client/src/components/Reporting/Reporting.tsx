@@ -67,7 +67,7 @@ const Reporting = () => {
     variables: { startDate:startDate , endDate:endDate }, onCompleted: (
     ) => {
       console.log(startDate)
-      setEtatData(data.refreshReporting)
+      data && setEtatData(data.refreshReporting)
       console.log('x')
       data && data.refreshReporting ? setFirstCat(getCat(data.refreshReporting)) : null
       console.log(firstCat)
