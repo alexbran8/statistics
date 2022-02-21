@@ -2,18 +2,27 @@ const router = require("express").Router();
 const passport = require("passport");
 const config = require("../config/config")
 
-console.log(config)
+  //secured api routes with no redirect
+  function authorizeApi(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } 
+      else return     res.status(401).json({
+       message : "User Not Authenticated",
+       user : null,
+       success: false,
+     })
+    
+}
 
 // when login is successful, retrieve user info
-router.get("/login/success", (req, res) => {
-  if (req.user) {
+router.get("/login/success",authorizeApi, (req, res) => {
     res.json({
       success: true,
       message: "user has successfully been authenticated",
       user: req.user,
       cookies: req.cookies
     });
-  }
 });
 
 // when login failed, send failed msg

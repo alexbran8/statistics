@@ -67,13 +67,15 @@ db.sequelize
 
 
 
+// define session
 app.use(
-  cookieSession({
-    name: "session",
-    keys: [keys.COOKIE_KEY],
-    maxAge: 24 * 60 * 60 * 100
+  session({
+    secret: 'our little secret',
+    saveUninitialized: true,
+    resave: true,
   })
 );
+
 
 // parse cookies
 app.use(cookieParser());
@@ -82,7 +84,9 @@ app.use(cookieParser());
 app.use(passport.initialize());
 // deserialize cookie from the browser
 app.use(passport.session());
+
 app.use("/static", express.static("static"));
+
 // set up cors to allow us to accept requests from our client
 app.use(
   cors({
@@ -94,9 +98,9 @@ app.use(
 
 // set up routes
 app.use("/auth", authRoutes);
-require("./routes/dailyTasks.routes")(app);
-require("./routes/competence.routes")(app);
-require("./routes/resource.routes")(app);
+// require("./routes/dailyTasks.routes")(app);
+// require("./routes/competence.routes")(app);
+// require("./routes/resource.routes")(app);
 
 
 const authCheck = (req, res, next) => {
@@ -111,10 +115,10 @@ const authCheck = (req, res, next) => {
 };
 
 const authCheckMiddleware = require('./middleware/auth-check')
-app.use("/users", authCheck,  require("./controllers/users"));
-app.use("/usersPrivate", authCheck, require("./controllers/usersPrivate"));
-app.use("/schedule",  authCheck, require("./controllers/schedule"));
-app.use("/types", find(Types));
+// app.use("/users", authCheck,  require("./controllers/users"));
+// app.use("/usersPrivate", authCheck, require("./controllers/usersPrivate"));
+// app.use("/schedule",  authCheck, require("./controllers/schedule"));
+// app.use("/types", find(Types));
 
 
 app.use("/", express.static(path.resolve(__dirname, "../client/public/dist")));
@@ -133,8 +137,13 @@ app.get("/", authCheck, (req, res) => {
 });
 
 
-apolloServer.applyMiddleware({ app, path: "/graphql" });
+const options = {
+  port: 4000,
+  bodyParserOptions: { limit: "10mb", type: "application/json" },
+};
 
 
-// connect react to nodejs express server
-app.listen(port, () => console.log(`Server is running on port ${port}!`));
+apolloServer.start().then(res => {
+  apolloServer.applyMiddleware({ app, path: "/graphql" });
+  app.listen(options, () => console.log(`Server is running on port ${port}!`));
+ })

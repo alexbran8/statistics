@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { UPDATE_PROFILE_TYPE } from '../redux/reducers/types'
+import { UPDATE_PROFILE } from '../redux/reducers/types'
 import { useSelector, useDispatch } from "react-redux";
 import { config } from "../config"
 
