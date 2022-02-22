@@ -168,14 +168,15 @@ const IncoherenceReporting = () => {
     }
     return null;
   });
+  var total = []
 
   const { data, loading, error, refetch } = useQuery(GET_ALL, {
     variables: { first: 10 }, onCompleted: (
     ) => {
-      var total = []
+   
       // get all incoherences
-      let sortedArray = data && sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
-      console.log(sortedArray)
+      let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
+
       sortedArray.reduce(function (res, value) {
         if (!res[value.week]) {
           res[value.week] = { week: value.week, values: 0 };
@@ -185,22 +186,9 @@ const IncoherenceReporting = () => {
         return res;
       }, {});
 
-      // console.log(total)
-      // console.log(data.getAll)
       var array2G = sortedArray.filter(a => a.technology == '2G').map(function (x) { return x.values })
-
-
-      // console.log(array2G)
-      // var array2G2 = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
-      // set2G(div)
       var array3G = sortedArray.filter(a => a.technology == '3G').map(function (x) { return x.values })
-      // console.log(array)
-      // var div = [...total].map((e, i) => ( array[i]/ e.values*100).toFixed(2));
-      // set3G(div)
       var array4G = sortedArray.filter(a => a.technology == '4G').map(function (x) { return x.values })
-      // console.log(array)
-      // var array4G = [...total].map((e, i) => (array[i]/e.values*100).toFixed(2));
-      // set4G(div)
       var array2G_percentage = array2G.map(function (x, i) { return (100 * x / (x + array3G[i] + array4G[i])).toFixed(2) })
       var array3G_percentage = array3G.map(function (x, i) { return (100 * x / (x + array2G[i] + array4G[i])).toFixed(2) })
       var array4G_percentage = array4G.map(function (x, i) { return (100 * x / (x + array3G[i] + array2G[i])).toFixed(2) })
@@ -215,15 +203,6 @@ const IncoherenceReporting = () => {
       var array = sortedArray.map(function (x) { return x.week })
       let unique = [...new Set(array)];
       setdateAxis(unique)
-      // console.log(firstCat) 
-
-
-      // console.log(array)
-
-
-
-
-
     }
   });
 
