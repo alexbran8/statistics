@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./IncoherenceReporting.scss"
 import moment from "moment";
 import { useMutation, useQuery, gql } from "@apollo/client";
@@ -35,7 +35,7 @@ mutation ($data: [Incoherence], $dataSub: [IncoherencesSub], $week: String!) {
 
 
 const GET_ALL = gql`
-  query  { 
+  query  {
     getAll(first:10)  {
         values
         week
@@ -88,6 +88,20 @@ const IncoherenceReporting = () => {
   const [_2GSubCat, set2GSubCat] = useState();
   const [subCatData, setsubCatData] = useState();
   const [dateAxis, setdateAxis] = useState();
+
+  const [inputData, setInputData] = useState({});
+
+  const { data, loading, error, refetch } = useQuery(GET_ALL, {
+    variables: { first: 10 }, onCompleted: (
+    ) => {
+      !loading && !error ? data &&prepareChartData(data) : null
+    }
+  });
+
+
+    // useEffect(()=> {
+  //   prepareChartData(inputData)
+  // },[])
 
 
 
@@ -157,54 +171,57 @@ const IncoherenceReporting = () => {
   };
 
   const sortArrayOfObjsByKey = (array, key, ascdesc) =>
-  array.sort((a, b) => {
-    const x = a[key];
-    const y = b[key];
-    if (ascdesc === 'asc') {
-      return x < y ? -1 : x > y ? 1 : 0;
-    }
-    if (ascdesc === 'desc') {
-      return x > y ? -1 : x < y ? 1 : 0;
-    }
-    return null;
-  });
-  var total = []
+    array.sort((a, b) => {
+      const x = a[key];
+      const y = b[key];
+      if (ascdesc === 'asc') {
+        return x < y ? -1 : x > y ? 1 : 0;
+      }
+      if (ascdesc === 'desc') {
+        return x > y ? -1 : x < y ? 1 : 0;
+      }
+      return null;
+    });
 
-  const { data, loading, error, refetch } = useQuery(GET_ALL, {
-    variables: { first: 10 }, onCompleted: (
-    ) => {
-   
-      // get all incoherences
-      let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
 
-      sortedArray.reduce(function (res, value) {
-        if (!res[value.week]) {
-          res[value.week] = { week: value.week, values: 0 };
-          total.push(res[value.week])
-        }
-        res[value.week].values += parseFloat(value.values);
-        return res;
-      }, {});
 
-      var array2G = sortedArray.filter(a => a.technology == '2G').map(function (x) { return x.values })
-      var array3G = sortedArray.filter(a => a.technology == '3G').map(function (x) { return x.values })
-      var array4G = sortedArray.filter(a => a.technology == '4G').map(function (x) { return x.values })
-      var array2G_percentage = array2G.map(function (x, i) { return (100 * x / (x + array3G[i] + array4G[i])).toFixed(2) })
-      var array3G_percentage = array3G.map(function (x, i) { return (100 * x / (x + array2G[i] + array4G[i])).toFixed(2) })
-      var array4G_percentage = array4G.map(function (x, i) { return (100 * x / (x + array3G[i] + array2G[i])).toFixed(2) })
-      
-      mergeData(
-        getSubCatData(data.getAllSubCat, '2G'), getSubCatData(data.getAllSubCat, '3G'), getSubCatData(data.getAllSubCat, '4G'),
-        array2G_percentage, array3G_percentage, array4G_percentage,
-        array2G,
-        array3G,
-        array4G
-      )
-      var array = sortedArray.map(function (x) { return x.week })
-      let unique = [...new Set(array)];
-      setdateAxis(unique)
-    }
-  });
+
+  const prepareChartData = (propsData) => {
+
+    var total = []
+  
+    var data = propsData
+    let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
+
+    sortedArray.reduce(function (res, value) {
+      if (!res[value.week]) {
+        res[value.week] = { week: value.week, values: 0 };
+        total.push(res[value.week])
+      }
+      res[value.week].values += parseFloat(value.values);
+      return res;
+    }, {});
+
+    var array2G = sortedArray.filter(a => a.technology == '2G').map(function (x) { return x.values })
+    var array3G = sortedArray.filter(a => a.technology == '3G').map(function (x) { return x.values })
+    var array4G = sortedArray.filter(a => a.technology == '4G').map(function (x) { return x.values })
+    var array2G_percentage = array2G.map(function (x, i) { return (100 * x / (x + array3G[i] + array4G[i])).toFixed(2) })
+    var array3G_percentage = array3G.map(function (x, i) { return (100 * x / (x + array2G[i] + array4G[i])).toFixed(2) })
+    var array4G_percentage = array4G.map(function (x, i) { return (100 * x / (x + array3G[i] + array2G[i])).toFixed(2) })
+
+    mergeData(
+      getSubCatData(data.getAllSubCat, '2G'), getSubCatData(data.getAllSubCat, '3G'), getSubCatData(data.getAllSubCat, '4G'),
+      array2G_percentage, array3G_percentage, array4G_percentage,
+      array2G,
+      array3G,
+      array4G
+    )
+    var array = sortedArray.map(function (x) { return x.week })
+    let unique = [...new Set(array)];
+    setdateAxis(unique)
+  }
+
+
 
   const lineChartData =
   {
@@ -302,7 +319,7 @@ const IncoherenceReporting = () => {
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                return val + "% (" + data2G[ctx.dataIndex]+')';
+                return val + "% (" + data2G[ctx.dataIndex] + ')';
               },
               color: '#404040',
               // backgroundColor: '#404040'
@@ -327,7 +344,7 @@ const IncoherenceReporting = () => {
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                return val + "% (" + data3G[ctx.dataIndex]+')';
+                return val + "% (" + data3G[ctx.dataIndex] + ')';
               },
               color: '#404040',
               // backgroundColor: '#404040'
@@ -351,7 +368,7 @@ const IncoherenceReporting = () => {
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                return val + "% (" + data4G[ctx.dataIndex]+')';
+                return val + "% (" + data4G[ctx.dataIndex] + ')';
               },
               color: '#404040',
               // backgroundColor: '#404040'
@@ -468,10 +485,10 @@ const IncoherenceReporting = () => {
 
 
     var mergedData = [
-      // ...data1, 
-      // ...data2, 
+      // ...data1,
+      // ...data2,
       // ...dataSub4G,
-      // ... data2, 
+      // ... data2,
       ...lineChartData.data.datasets
     ]
     // console.log(mergedData)
@@ -650,7 +667,7 @@ const IncoherenceReporting = () => {
         plugins={[ChartDataLabels]}
         height={0}
         width={250}
-      //  options={} 
+      //  options={}
       /> : null}
     </div>
     <ExcelReader
