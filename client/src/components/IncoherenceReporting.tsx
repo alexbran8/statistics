@@ -94,12 +94,12 @@ const IncoherenceReporting = () => {
   const { data, loading, error, refetch } = useQuery(GET_ALL, {
     variables: { first: 10 }, onCompleted: (
     ) => {
-      !loading && !error ? data &&prepareChartData(data) : null
+      !loading && !error ? data && prepareChartData(data) : null
     }
   });
 
 
-    // useEffect(()=> {
+  // useEffect(()=> {
   //   prepareChartData(inputData)
   // },[])
 
@@ -189,7 +189,7 @@ const IncoherenceReporting = () => {
   const prepareChartData = (propsData) => {
 
     var total = []
-  
+
     var data = propsData
     let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
 
@@ -291,6 +291,7 @@ const IncoherenceReporting = () => {
         //     // min: 1000
         //   }
         // }
+
       },
     }
   }
@@ -643,7 +644,9 @@ const IncoherenceReporting = () => {
         </div>
         : null}
     </div>
+    <h5 style={{ color: 'red' }}>KNOW BUG: please refresh page if notghing is being shown in the table. It happens when switching pages...</h5>
     <div className="chart-container">
+
       Incoherence Reporting Weekly Values (by Technology)
       <Form className="reportingForm" onSubmit={handleSubmit(onSubmit)}>
         <Form.Group controlId="new">
