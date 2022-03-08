@@ -7,7 +7,8 @@ import { useEffect } from 'react';
 
 export const Ransharing = () => {
     const [results, setResults] = useState([]);
-    const [status, setStatus] = useState<String>('');
+    const [status, setStatus] = useState < String > ('');
+
     function getCase(fileName) {
         switch (true) {
             case fileName.includes('FRM'):
@@ -21,56 +22,78 @@ export const Ransharing = () => {
         return result
     }
 
+    function handleInputFile(zipFile) {
+        handleZip(zipFile)
+        //     let newResults = []
+        //     newResults.push(handleZip(zipFile))
+        //     // console.log(finalResults)
+        //     setResults(newResults)
+        //     console.log(results)
+        //     console.log('res',newResults)
+    }
 
     const handleZip = (zipFile) => {
         const zip = new JSZip();
         zip.loadAsync(zipFile[0])
-        .then(result => {console.log(result.files)})
-        .catch(error => {
-            console.log('there has been an error', error)
-            console.log(error.message)
-            setStatus(error.message)
-        })
-    }
+            .then(function (zip) {
+                Object.keys(zip.files).forEach(file => {
+                    zip.files[file].async('string').then(function (fileData) {
+                        var updatedResults = [];
+                        let newResults = results
+                        let caseName = getCase(file)
+                        // var updatedResults = fileData;
+                        newResults.push({ fileName: file, case: [caseName], content: fileData.match(/ZPB......./g) })
 
-    const handleFiles = (files) => {
-                let caseName = getCase(files[0].name);
-            files[0].text()
-            .then(firstStep => { const start = performance.now(); return {firstStep, start} })
-            .then(result => {
-                const mid = performance.now() - result.start; console.log(mid);
-            // extract array of cells from XML object
-            return result.firstStep.match(/ZPB......./g)
+                        updatedResults = [...newResults]
+                        console.log({ updatedResults })
+                        setResults(updatedResults)
+                        // console.log({ [caseName]: fileData.match(/ZPB......./g) })
+                        return { [caseName]: fileData.match(/ZPB......./g) }
+                    })
+                })
             })
-            .then(res => {var updatedResults = results;
-            updatedResults[caseName] = res
-            console.log(updatedResults)
-            setResults(updatedResults)
-            }
-            )
-            .catch(function (e) {
-                console.error('There has been an error');
-            console.error(e); // "oh, no!"
+            .catch(error => {
+                console.log('there has been an error', error)
+                console.log(error.message)
+                setStatus(error.message)
             })
     }
 
 
-useEffect(()=> {
-                console.log(results)
-            },[results])
+    // useEffect(() => {
+    //     console.log('heerrr', results)
+    // }, [results])
 
-            return (
-            <div className='ransharing-container'>
-                <h1>Ransharing Reporting</h1>
-                <h5>{status}</h5>
-                <p>1. import XML FILE</p>
-                <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleZip}>
-                    <button className='btn'>Upload</button>
-                </ReactFileReader>
-                {/* <ReactFileReader multipleFiles={false} fileTypes={[".csv"]} handleFiles={handleFiles}>
-                    <button className='btn'>Upload</button>
-                </ReactFileReader> */}
-                <p>2. process files</p>
-            </div>
-            )
+    return (
+        <div className='ransharing-container'>
+            <h1>Ransharing Reporting</h1>
+            <h5>{status}</h5>
+            <p>1. import ZIP FILE</p>
+            <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleInputFile}>
+                <button className='btn'>Upload</button>
+            </ReactFileReader>
+            <p>2. process files</p>
+
+            <h5>These are the files that have been loaded</h5>
+            <table className='ransharing-table'>
+                <thead>
+                    <th>FILE</th>
+                    <th>CASE</th>
+                    <th>CELLS FOUND</th>
+                    {/* {console.log(results)} */}
+                </thead>
+                {results && results.map(item => {
+                    console.log('x', item.case)
+                    return (
+                        <tr>
+                            <td>{item.fileName}</td>
+                            <td>{item.case}</td>
+                            <td>{item.content.length}</td>
+                        </tr>
+                    )
+                })}
+            </table>
+            {/* {fileList && fileList.map(item => { console.log(item)})} */}
+        </div>
+    )
 }
