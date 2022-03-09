@@ -49,7 +49,7 @@ export const Ransharing = () => {
                 var result = 'SFR-BYT';
                 break;
             case fileName.substring(0, 15).includes('ORF') && fileName.includes('xml') && fileName.includes('BYT'):
-                var result = 'ORF-FRM';
+                var result = 'ORF-BYT';
                 break;
         }
         return result
