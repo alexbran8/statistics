@@ -86,9 +86,21 @@ export const Ransharing = () => {
                 Object.keys(zip.files).forEach(file => {
                     zip.files[file].async('string').then(function (fileData) {
                         var updatedResults = [];
-
+                        console.log(fileData)
                         let caseName = getCase(file)
-                        newResults.push({ fileName: file, caseName: caseName, fileType: file.includes('xml') ? 'XML' : 'CSV', content: fileData.match(/ZPB......./g) })
+                        if(file.includes('xml')) {
+                            var fileType = 'XML'
+                            var fileContent = fileData.match(/<zp_cellule>(.*?)<\/zp_cellule>/g)
+                            var fileContent2 = fileContent.map(item=> {return item.replace('<zp_cellule>', '').replace('</zp_cellule>', '')})
+                        }
+                        else
+                        {
+                            var fileType = 'CSV'
+                            var fileContent = fileData.match(/ZP......../g)
+                            var fileContent2 =  Array.from(new Set(fileContent));
+                        }
+
+                        newResults.push({ fileName: file, caseName: caseName, fileType: fileType, content: fileContent2  })
                         updatedResults = [...newResults]
                         setResults(updatedResults)
                     })
@@ -134,7 +146,7 @@ export const Ransharing = () => {
                                         <td>{item.fileName}</td>
                                         <td>{item.caseName}</td>
                                         <td>{item.fileType}</td>
-                                        <td>{item.content.length}</td>
+                                        <td>{item.content && item.content.length}</td>
                                         {/* <td>{item.content}</td> */}
                                     </tr>
                                 )
