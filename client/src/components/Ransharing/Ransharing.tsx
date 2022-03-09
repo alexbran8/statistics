@@ -30,7 +30,7 @@ export const Ransharing = () => {
                 var result = 'SFR-BYT';
                 break;
             case fileName.substring(0, 15).includes('ORF') && fileName.includes('csv') && fileName.includes('BYT'):
-                var result = 'ORF-FRM';
+                var result = 'ORF-BYT';
                 break;
 
             case fileName.substring(0, 15).includes('FRM') && fileName.includes('xml') && fileName.includes('BYT'):
@@ -56,15 +56,15 @@ export const Ransharing = () => {
     }
 
     useEffect(() => {
+        try{
         if (results && results.length === 12) {
             let a = results.filter(x => x.fileType == 'XML')
             let b = results.filter(x => x.fileType == 'CSV')
             let comparisonResults = []
             a.forEach(item => {
+                
                 let itemToCompareWith = b.find(x => x.caseName == item.caseName)
-                // console.log(itemToCompareWith.content)
-                // console.log(item.content)
-                let diff1 = item.content.filter(e => !itemToCompareWith.content.includes(e))
+                let diff1 = item.content.filter(e => itemToCompareWith&& itemToCompareWith.content ?!itemToCompareWith.content.includes(e) : [])
                 let diff2 = itemToCompareWith.content.filter(e => !item.content.includes(e))
                 
                 let updatedComparisonResults = []
@@ -75,6 +75,13 @@ export const Ransharing = () => {
                 setComparisonResults(updatedComparisonResults)
             }
             )
+        }
+
+        }
+        catch (error) {
+            console.log('there has been an error', error)
+            console.log(error.message)
+            setStatus(error.message)
         }
     }, [results])
 
