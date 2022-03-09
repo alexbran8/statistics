@@ -4,51 +4,93 @@ import ReactFileReader from 'react-file-reader';
 import "./Ransharing.scss"
 import JSZip from 'jszip';
 import { useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+
 
 export const Ransharing = () => {
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState();
+    const [comparisonResults, setComparisonResults] = useState();
     const [status, setStatus] = useState < String > ('');
 
     function getCase(fileName) {
         switch (true) {
-            case fileName.includes('FRM'):
-                console.log('FRM');
-                var result = 'FRM';
+            case fileName.substring(0, 15).includes('FRM') && fileName.includes('csv') && fileName.includes('BYT'):
+                var result = 'FRM-BYT';
                 break;
-            case fileName.includes('BYT'):
-                var result = 'BYT';
+            case fileName.substring(0, 15).includes('BYT') && fileName.includes('csv') && fileName.includes('FRM'):
+                var result = 'BYT-FRM';
+                break;
+            case fileName.substring(0, 15).includes('BYT') && fileName.includes('csv') && fileName.includes('SFR'):
+                var result = 'BYT-SFR';
+                break;
+            case fileName.substring(0, 15).includes('BYT') && fileName.includes('csv') && fileName.includes('ORF'):
+                var result = 'BYT-ORF';
+                break;
+            case fileName.substring(0, 15).includes('SFR') && fileName.includes('csv') && fileName.includes('BYT'):
+                var result = 'SFR-BYT';
+                break;
+            case fileName.substring(0, 15).includes('ORF') && fileName.includes('csv') && fileName.includes('BYT'):
+                var result = 'ORF-FRM';
+                break;
+
+            case fileName.substring(0, 15).includes('FRM') && fileName.includes('xml') && fileName.includes('BYT'):
+                var result = 'FRM-BYT';
+                break;
+            case fileName.substring(0, 15).includes('BYT') && fileName.includes('xml') && fileName.includes('FRM'):
+                var result = 'BYT-FRM';
+                break;
+            case fileName.substring(0, 15).includes('BYT') && fileName.includes('xml') && fileName.includes('SFR'):
+                var result = 'BYT-SFR';
+                break;
+            case fileName.substring(0, 15).includes('BYT') && fileName.includes('xml') && fileName.includes('ORF'):
+                var result = 'BYT-ORF';
+                break;
+            case fileName.substring(0, 15).includes('SFR') && fileName.includes('xml') && fileName.includes('BYT'):
+                var result = 'SFR-BYT';
+                break;
+            case fileName.substring(0, 15).includes('ORF') && fileName.includes('xml') && fileName.includes('BYT'):
+                var result = 'ORF-FRM';
                 break;
         }
         return result
     }
 
-    function handleInputFile(zipFile) {
-        handleZip(zipFile)
-        //     let newResults = []
-        //     newResults.push(handleZip(zipFile))
-        //     // console.log(finalResults)
-        //     setResults(newResults)
-        //     console.log(results)
-        //     console.log('res',newResults)
-    }
+    useEffect(() => {
+        if (results && results.length === 12) {
+            let a = results.filter(x => x.fileType == 'XML')
+            let b = results.filter(x => x.fileType == 'CSV')
+            let comparisonResults = []
+            a.forEach(item => {
+                let itemToCompareWith = b.find(x => x.caseName == item.caseName)
+                // console.log(itemToCompareWith.content)
+                // console.log(item.content)
+                let diff1 = item.content.filter(e => !itemToCompareWith.content.includes(e))
+                let diff2 = itemToCompareWith.content.filter(e => !item.content.includes(e))
+                
+                let updatedComparisonResults = []
+                comparisonResults.push({caseName:item.caseName, diff1:diff1, diff1Cells:diff1.length, diff2Cells:diff2.length, diff2:diff2})
+                console.log(item.caseName)
+                updatedComparisonResults = [...comparisonResults]
+                console.log(updatedComparisonResults)
+                setComparisonResults(updatedComparisonResults)
+            }
+            )
+        }
+    }, [results])
 
     const handleZip = (zipFile) => {
         const zip = new JSZip();
         zip.loadAsync(zipFile[0])
             .then(function (zip) {
+                var newResults = []
                 Object.keys(zip.files).forEach(file => {
                     zip.files[file].async('string').then(function (fileData) {
                         var updatedResults = [];
-                        let newResults = results
-                        let caseName = getCase(file)
-                        // var updatedResults = fileData;
-                        newResults.push({ fileName: file, case: [caseName], content: fileData.match(/ZPB......./g) })
 
+                        let caseName = getCase(file)
+                        newResults.push({ fileName: file, caseName: caseName, fileType: file.includes('xml') ? 'XML' : 'CSV', content: fileData.match(/ZPB......./g) })
                         updatedResults = [...newResults]
-                        console.log({ updatedResults })
                         setResults(updatedResults)
-                        // console.log({ [caseName]: fileData.match(/ZPB......./g) })
-                        return { [caseName]: fileData.match(/ZPB......./g) }
                     })
                 })
             })
@@ -59,41 +101,83 @@ export const Ransharing = () => {
             })
     }
 
-
-    // useEffect(() => {
-    //     console.log('heerrr', results)
-    // }, [results])
-
     return (
         <div className='ransharing-container'>
             <h1>Ransharing Reporting</h1>
             <h5>{status}</h5>
-            <p>1. import ZIP FILE</p>
-            <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleInputFile}>
-                <button className='btn'>Upload</button>
+            <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleZip}>
+                <Button variant="contained" color="primary" className='btn'>Click here to upload ZIP file</Button>
             </ReactFileReader>
-            <p>2. process files</p>
 
-            <h5>These are the files that have been loaded</h5>
-            <table className='ransharing-table'>
-                <thead>
-                    <th>FILE</th>
-                    <th>CASE</th>
-                    <th>CELLS FOUND</th>
-                    {/* {console.log(results)} */}
-                </thead>
-                {results && results.map(item => {
-                    console.log('x', item.case)
-                    return (
-                        <tr>
-                            <td>{item.fileName}</td>
-                            <td>{item.case}</td>
-                            <td>{item.content.length}</td>
-                        </tr>
-                    )
-                })}
-            </table>
-            {/* {fileList && fileList.map(item => { console.log(item)})} */}
+
+
+            {results ?
+                <>
+                    <h5>Processed files</h5>
+                    <table className='ransharing-table'>
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>FILE</td>
+                                <td>CASE</td>
+                                <td>FILE TYPE</td>
+                                <td>NO. OF CELLS</td>
+                            </tr>
+                            {/* <th>CELLS</th> */}
+                            {/* {console.log(results)} */}
+                        </thead>
+                        <tbody>
+                            {results.map((item, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.fileName}</td>
+                                        <td>{item.caseName}</td>
+                                        <td>{item.fileType}</td>
+                                        <td>{item.content.length}</td>
+                                        {/* <td>{item.content}</td> */}
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </>
+                : null}
+
+{comparisonResults ?
+                <>
+                    <h5>Processing results</h5>
+                    <table className='ransharing-table'>
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>CASE</td>
+                                <td>XML vs CSV</td>
+                                <td>CELLS</td>
+                                <td>CSV vs XML</td>
+                                <td>CELLS</td>
+                            </tr>
+                            {/* <th>CELLS</th> */}
+                            {/* {console.log(results)} */}
+                        </thead>
+                        <tbody>
+                            {comparisonResults.map((item, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.caseName}</td>
+                                        <td>{item.diff1}</td>
+                                        <td>{item.diff1Cells}</td>
+                                        {console.log(item.diff2)}
+                                        <td>{item.diff2}</td>
+                                        <td>{item.diff2Cells}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </>
+                : null}
         </div>
     )
 }
