@@ -91,13 +91,15 @@ export const Ransharing = () => {
                         if(file.includes('xml')) {
                             var fileType = 'XML'
                             var fileContent = fileData.match(/<zp_cellule>(.*?)<\/zp_cellule>/g)
-                            var fileContent2 = fileContent.map(item=> {return item.replace('<zp_cellule>', '').replace('</zp_cellule>', '')})
+                            var fileContent2 = fileContent.map(item=> {return item.replace('<zp_cellule>', '').replace('</zp_cellule>', '').replace('ZP_cellule','')})
                         }
                         else
                         {
                             var fileType = 'CSV'
                             var fileContent = fileData.match(/ZP......../g)
-                            var fileContent2 =  Array.from(new Set(fileContent));
+                            var fileContentTemp =  Array.from(new Set(fileContent));
+                            var fileContent2 = fileContentTemp.filter(item=> item!=='ZP_cellule')
+
                         }
 
                         newResults.push({ fileName: file, caseName: caseName, fileType: fileType, content: fileContent2  })
@@ -165,9 +167,9 @@ export const Ransharing = () => {
                                 <td>ID</td>
                                 <td>CASE</td>
                                 <td>XML vs CSV</td>
-                                <td>CELLS</td>
+                                {/* <td>CELLS</td> */}
                                 <td>CSV vs XML</td>
-                                <td>CELLS</td>
+                                {/* <td>CELLS</td> */}
                             </tr>
                             {/* <th>CELLS</th> */}
                             {/* {console.log(results)} */}
@@ -178,11 +180,10 @@ export const Ransharing = () => {
                                     <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.caseName}</td>
-                                        <td>{item.diff1}</td>
                                         <td>{item.diff1Cells}</td>
-                                        {console.log(item.diff2)}
-                                        <td>{item.diff2}</td>
                                         <td>{item.diff2Cells}</td>
+                                        <td>{item.diff2.map(cell=> {return <>{cell}, </>})}</td> 
+                                        <td>{item.diff1.map(cell=> {return <>{cell}, </>})}</td>
                                     </tr>
                                 )
                             })}
