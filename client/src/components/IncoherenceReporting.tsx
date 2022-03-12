@@ -191,7 +191,7 @@ const IncoherenceReporting = () => {
     var total = []
 
     var data = propsData
-    let sortedArray = sortArrayOfObjsByKey(data.getAll, 'week', 'asc')
+    let sortedArray = sortArrayOfObjsByKey(data.getAll, 'date', 'asc')
 
     sortedArray.reduce(function (res, value) {
       if (!res[value.week]) {
