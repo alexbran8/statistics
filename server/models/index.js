@@ -18,6 +18,7 @@ db.sequelize = sequelize;
 
 // db.dailyTasks.model = require("./dailyTasks.model.js")(sequelize, Sequelize);
 db.Incoherences = require("./incoherences.js")(sequelize, Sequelize);
+db.Ransharing = require("./ransharing.model.js")(sequelize, Sequelize);
 db.IncoherencesCat = require("./incoherencesCat.js")(sequelize, Sequelize);
 db.EtatReporting = require("./etatReporting.js")(sequelize, Sequelize);
 

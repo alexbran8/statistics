@@ -3,6 +3,7 @@ const { gql } = require("apollo-server");
 const incoherences = require("./incoherences");
 
 
+
 const rootType = gql`
   type Query {
     root: String

@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import { useMutation, useQuery, gql } from "@apollo/client";
+
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,13 +24,54 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+const SAVE_DATA = gql`
+mutation ($data: [RansahringData], $week: String!) {
+    saveRansharingData (data:$data, week:$week){
+        success
+        message
+      }
+    }
+
+`;
+
 export const Ransharing = () => {
     const [results, setResults] = useState();
+    const [selectedWeek, setSelectedWeek] = useState<String>();
     const classes = useStyles();
     const [comparisonResults, setComparisonResults] = useState();
     const [status, setStatus] = useState < String > ('');
     const [date, setDate] = useState()
 
+
+    const [saveDataMutation] = useMutation(SAVE_DATA, {
+        onCompleted: (dataRes) => {
+          alert(dataRes.saveRansharingData.message);
+          // console.log(dataRes.saveData)
+
+        },
+        onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
+      });
+
+    const saveData = () => {
+        
+
+        saveDataMutation({
+            variables: { week: selectedWeek, data: comparisonResults }
+        })
+    }
+
+
+    const getWeek = (date) => {
+
+        const currentdate = new Date(date);
+        var oneJan = new Date(currentdate.getFullYear(), 0, 1);
+        var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+        var result = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
+        setSelectedWeek(result - 1 + '-' + currentdate.getFullYear())
+    
+      }
+
+      
     function getCase(fileName) {
         switch (true) {
             case fileName.substring(0, 15).includes('FRM') && fileName.includes('csv') && fileName.includes('BYT'):
@@ -73,26 +116,26 @@ export const Ransharing = () => {
     }
 
     useEffect(() => {
-        try{
-        if (results && results.length === 12) {
-            let a = results.filter(x => x.fileType == 'XML')
-            let b = results.filter(x => x.fileType == 'CSV')
-            let comparisonResults = []
-            a.forEach(item => {
-                
-                let itemToCompareWith = b.find(x => x.caseName == item.caseName)
-                let diff1 = item.content.filter(e => itemToCompareWith&& itemToCompareWith.content ?!itemToCompareWith.content.includes(e) : [])
-                let diff2 = itemToCompareWith.content.filter(e => !item.content.includes(e))
-                
-                let updatedComparisonResults = []
-                comparisonResults.push({caseName:item.caseName, diff1:diff1, diff1Cells:diff1.length, diff2Cells:diff2.length, diff2:diff2})
-                console.log(item.caseName)
-                updatedComparisonResults = [...comparisonResults]
-                console.log(updatedComparisonResults)
-                setComparisonResults(updatedComparisonResults)
+        try {
+            if (results && results.length === 12) {
+                let a = results.filter(x => x.fileType == 'XML')
+                let b = results.filter(x => x.fileType == 'CSV')
+                let comparisonResults = []
+                a.forEach(item => {
+
+                    let itemToCompareWith = b.find(x => x.caseName == item.caseName)
+                    let diff1 = item.content.filter(e => itemToCompareWith && itemToCompareWith.content ? !itemToCompareWith.content.includes(e) : [])
+                    let diff2 = itemToCompareWith.content.filter(e => !item.content.includes(e))
+
+                    let updatedComparisonResults = []
+                    comparisonResults.push({ caseName: item.caseName, diff1Cells: JSON.stringify(diff1), diff1: diff1.length, diff2: diff2.length, diff2Cells: JSON.stringify(diff2) })
+
+                    updatedComparisonResults = [...comparisonResults]
+    
+                    setComparisonResults(updatedComparisonResults)
+                }
+                )
             }
-            )
-        }
 
         }
         catch (error) {
@@ -112,21 +155,20 @@ export const Ransharing = () => {
                         var updatedResults = [];
                         console.log(fileData)
                         let caseName = getCase(file)
-                        if(file.includes('xml')) {
+                        if (file.includes('xml')) {
                             var fileType = 'XML'
                             var fileContent = fileData.match(/<zp_cellule>(.*?)<\/zp_cellule>/g)
-                            var fileContent2 = fileContent.map(item=> {return item.replace('<zp_cellule>', '').replace('</zp_cellule>', '').replace('ZP_cellule','')})
+                            var fileContent2 = fileContent.map(item => { return item.replace('<zp_cellule>', '').replace('</zp_cellule>', '').replace('ZP_cellule', '') })
                         }
-                        else
-                        {
+                        else {
                             var fileType = 'CSV'
                             var fileContent = fileData.match(/ZP......../g)
-                            var fileContentTemp =  Array.from(new Set(fileContent));
-                            var fileContent2 = fileContentTemp.filter(item=> item!=='ZP_cellule')
+                            var fileContentTemp = Array.from(new Set(fileContent));
+                            var fileContent2 = fileContentTemp.filter(item => item !== 'ZP_cellule')
 
                         }
 
-                        newResults.push({ fileName: file, caseName: caseName, fileType: fileType, content: fileContent2  })
+                        newResults.push({ fileName: file, caseName: caseName, fileType: fileType, content: fileContent2 })
                         updatedResults = [...newResults]
                         setResults(updatedResults)
                     })
@@ -138,6 +180,12 @@ export const Ransharing = () => {
                 setStatus(error.message)
             })
     }
+
+    const submitResults = () => {
+        console.log('submiting results')
+    }
+
+    const newDate = new Date()
 
     return (
         <div className='ransharing-container'>
@@ -182,7 +230,7 @@ export const Ransharing = () => {
                 </>
                 : null}
 
-{comparisonResults ?
+            {comparisonResults ?
                 <>
                     <h5>Processing results</h5>
                     <table className='ransharing-table'>
@@ -204,30 +252,28 @@ export const Ransharing = () => {
                                     <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.caseName}</td>
-                                        <td>{item.diff1Cells}</td>
+                                        <td>{item.diff1}</td>
+                                        <td>{item.diff2}</td>
                                         <td>{item.diff2Cells}</td>
-                                        <td>{item.diff2.map(cell=> {return <>{cell}, </>})}</td> 
-                                        <td>{item.diff1.map(cell=> {return <>{cell}, </>})}</td>
+                                        <td>{item.diff1Cells}</td>
                                     </tr>
                                 )
                             })}
                         </tbody>
                     </table>
                     <form>
-                    <>
-                <TextField
-                    id="date"
-                    type="date"
-                    // defaultValue={newDate.getDate()}
-                    variant="outlined"
-                    className={classes.textField}
-                    onChange={(e, v) => { setDate(e.target.value); console.log(e.target.value); refetch() }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-                </>
-                    <button>Select Date</button>
+                        <TextField
+                            id="date"
+                            type="date"
+                            defaultValue={newDate.getDate()}
+                            variant="outlined"
+                            className={classes.textField}
+                            onChange={(e, v) => { getWeek(e.target.value); console.log(e.target.value); }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <Button variant="contained" color="primary" onClick={() => { saveData() }} className='btn'>Click here to save results</Button>
                     </form>
                 </>
                 : null}

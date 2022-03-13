@@ -33,6 +33,31 @@ const context = require("./graphql/context");
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    // get the user token from the headers
+    const token = req.headers.authorization || '';
+    const user = req.headers || '';
+    // console.log(user)
+    // console.log(token)
+   
+    // try to retrieve a user with the token
+    // const user = getUser(token);
+    // var decoded = jwt.decode(token)
+    // console.log('exp',new Date(1000 * decoded.exp));
+    // console.log('now',new Date());
+
+    // eliminated token expire check
+    // TODO: check if this has been the issue...
+    // if (new Date(1000 * decoded.exp) < new Date() )throw new AuthenticationError('token has expired');
+   
+    // optionally block the user
+    // we could also check user roles/permissions here
+    if (!user) throw new AuthenticationError('you must be logged in');
+   
+    // add the user to the context
+    return { user };
+   },
+
   // uploads: false,
   // context,
   // introspection: true,

@@ -13,6 +13,14 @@ input Incoherence {
     incoherence: String!
   }
 
+input RansahringData {
+  diff1: Int!
+  diff2: Int!
+  diff1Cells:String
+  diff2Cells:String
+  caseName: String!
+}
+
   type Response {
     success: String!
     message: String!
@@ -41,6 +49,7 @@ input Incoherence {
 
 extend type Mutation {
   saveData (data: [Incoherence], dataSub: [IncoherencesSub], week: String!):Response!
+  saveRansharingData(data: [RansahringData], week: String!):Response!
 }
 
 extend type Query {
@@ -48,4 +57,5 @@ extend type Query {
   getAllSubCat (first:Int!):[IncoherenceSubModel]
   refreshReporting(startDate:String! endDate:String!):[Etat]
 }
+
 `;
