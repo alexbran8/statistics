@@ -5,12 +5,29 @@ import "./Ransharing.scss"
 import JSZip from 'jszip';
 import { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+}));
 
 
 export const Ransharing = () => {
     const [results, setResults] = useState();
+    const classes = useStyles();
     const [comparisonResults, setComparisonResults] = useState();
     const [status, setStatus] = useState < String > ('');
+    const [date, setDate] = useState()
 
     function getCase(fileName) {
         switch (true) {
@@ -196,6 +213,22 @@ export const Ransharing = () => {
                             })}
                         </tbody>
                     </table>
+                    <form>
+                    <>
+                <TextField
+                    id="date"
+                    type="date"
+                    // defaultValue={newDate.getDate()}
+                    variant="outlined"
+                    className={classes.textField}
+                    onChange={(e, v) => { setDate(e.target.value); console.log(e.target.value); refetch() }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                </>
+                    <button>Select Date</button>
+                    </form>
                 </>
                 : null}
         </div>
