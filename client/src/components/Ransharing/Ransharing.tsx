@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import { ExportToExcel } from "../Export/ExportExcel"
+
 import { useMutation, useQuery, gql } from "@apollo/client";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,7 +38,7 @@ mutation ($data: [RansahringData], $week: String!) {
 
 export const Ransharing = () => {
     const [results, setResults] = useState();
-    const [selectedWeek, setSelectedWeek] = useState<String>();
+    const [selectedWeek, setSelectedWeek] = useState < String > ();
     const classes = useStyles();
     const [comparisonResults, setComparisonResults] = useState();
     const [status, setStatus] = useState < String > ('');
@@ -45,15 +47,15 @@ export const Ransharing = () => {
 
     const [saveDataMutation] = useMutation(SAVE_DATA, {
         onCompleted: (dataRes) => {
-          alert(dataRes.saveRansharingData.message);
-          // console.log(dataRes.saveData)
+            alert(dataRes.saveRansharingData.message);
+            // console.log(dataRes.saveData)
 
         },
         onError: (error) => { console.error("Error creating a post", error); alert("Error creating a post request " + error.message) },
-      });
+    });
 
     const saveData = () => {
-        
+
 
         saveDataMutation({
             variables: { week: selectedWeek, data: comparisonResults }
@@ -68,10 +70,9 @@ export const Ransharing = () => {
         var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
         var result = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
         setSelectedWeek(result - 1 + '-' + currentdate.getFullYear())
-    
-      }
 
-      
+    }
+
     function getCase(fileName) {
         switch (true) {
             case fileName.substring(0, 15).includes('FRM') && fileName.includes('csv') && fileName.includes('BYT'):
@@ -131,7 +132,7 @@ export const Ransharing = () => {
                     comparisonResults.push({ caseName: item.caseName, diff1Cells: JSON.stringify(diff1), diff1: diff1.length, diff2: diff2.length, diff2Cells: JSON.stringify(diff2) })
 
                     updatedComparisonResults = [...comparisonResults]
-    
+
                     setComparisonResults(updatedComparisonResults)
                 }
                 )
@@ -274,6 +275,11 @@ export const Ransharing = () => {
                             }}
                         />
                         <Button variant="contained" color="primary" onClick={() => { saveData() }} className='btn'>Click here to save results</Button>
+                        <ExportToExcel
+                            getData={comparisonResults}
+                            fileName="export_tacdb"
+                            operationName="export all"
+                        />
                     </form>
                 </>
                 : null}
