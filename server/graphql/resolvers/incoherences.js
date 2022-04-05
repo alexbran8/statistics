@@ -50,6 +50,26 @@ module.exports = {
         console.log(error)
       }
     },
+    async getAllRansharing(root, args, context) {
+      try{
+      let result = await db.Ransharing.findAll({
+      //   // where: where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
+      //   // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
+      //   // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
+      //   limit: 15,
+      //   order: [
+      //     ['date', 'DESC'],
+      // ],
+      });
+      
+      console.log(result)
+
+      return result;
+      }
+      catch (error) {
+        console.log(error)
+      }
+    },
     async getAllSubCat(root, args, context) {
       let result = await db.IncoherencesCat.findAll({
         // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },

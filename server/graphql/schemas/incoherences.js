@@ -19,6 +19,7 @@ input RansahringData {
   diff1Cells:String
   diff2Cells:String
   caseName: String!
+  week: String
 }
 
   type Response {
@@ -32,6 +33,15 @@ input RansahringData {
     count: Int
     ETAT: String
     percentage: String
+  }
+
+  type GetAllRansahring {
+    diff1: Int!
+    diff2: Int!
+    diff1Cells:String
+    diff2Cells:String
+    caseName: String!
+    week:String!
   }
 
   type IncoherenceModel {
@@ -54,6 +64,7 @@ extend type Mutation {
 
 extend type Query {
   getAll (first:Int!):[IncoherenceModel]
+  getAllRansharing:[GetAllRansahring]
   getAllSubCat (first:Int!):[IncoherenceSubModel]
   refreshReporting(startDate:String! endDate:String!):[Etat]
 }
