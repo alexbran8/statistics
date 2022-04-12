@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import XMLParser from "react-xml-parser";
 import ReactFileReader from 'react-file-reader';
 
-import { Bar } from 'react-chartjs-2';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 
+import { RansharingCharts } from './RansharingCharts'
+import { CaseFilter } from './CaseFilter'
 
 import "./Ransharing.scss"
 import JSZip from 'jszip';
@@ -20,8 +20,8 @@ import { useMutation, useQuery, gql } from "@apollo/client";
 import { makeStyles } from '@material-ui/core/styles';
 
 const GET_ALL_RANSHARING = gql`
-  query  {
-    getAllRansharing {
+  query ($selectedCase: String)  {
+    getAllRansharing (selectedCase:$selectedCase) {
         diff1
         diff2
         diff1Cells
@@ -60,25 +60,31 @@ mutation ($data: [RansahringData], $week: String!) {
 export const Ransharing = () => {
     const [results, setResults] = useState();
     const [selectedWeek, setSelectedWeek] = useState < String > (null);
-    const [ranData, setRanData] = useState(null)
+    const [selectedCase, setSelectedCase] = useState();
     const classes = useStyles();
     const [comparisonResults, setComparisonResults] = useState();
     const [status, setStatus] = useState < String > ('');
     const [date, setDate] = useState()
-    const [dateAxis, setDateAxis] = useState([])
+    const [allData, setAllData] = useState()
+
+    var groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
 
     const { data, loading, error, refetch } = useQuery(GET_ALL_RANSHARING, {
         variables: { first: 10 }, onCompleted: (
         ) => {
             console.log(data)
+            // setAllData(data)
+
+           let grouppedDate = groupBy(data.getAllRansharing, "caseName")
+           setAllData(grouppedDate)
             // setRanData(data.getAllRansharing)
             // mergeData(data.getAllRansharing)
-            var BCMdata = data.getAllRansharing.filter(a => a.caseName == 'BYT-FRM').map(function (x) { return x.diff1 })
-            var BYTSFRdata = data.getAllRansharing.filter(a => a.caseName == 'BYT-SFR').map(function (x) { return x.diff1 })
-            mergeData(BCMdata, BYTSFRdata)
-            var array = data.getAllRansharing.map(function (x) { return x.week })
-            let unique = [...new Set(array)];
-            setDateAxis(unique)
+
             //   !loading && !error ? data&& prepareChartData(data) : null
         },
         onError: () => (
@@ -229,238 +235,16 @@ export const Ransharing = () => {
     }
 
     const newDate = new Date()
-    const lineChartData =
-    {
-      options: {
-        xAxes: [{
-          stacked: false,
-          offset: true,
-          barPercentage: 0.9
-        }],
-        yAxes: [{
-          stacked: false
-        }],
-        plugins: {
-        },
-        scales: {
-          A: {
-            // type: 'linear',
-            position: 'left',
-            stacked: true,
-            // ticks: {
-            //   autoSkip: false
-            // },
-            title: {
-              display: true,
-              text: '% du total'
-            },
-          },  
-        },
-      }
-    }
-    
 
-    const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, data4GPercentage, data2G, data3G, data4G) => {
-        
-        const lineChartData = {
-          data: {
-            labels: dateAxis,
-            datasets: [
-              {
-                type: 'bar',
-                label: '2G',
-                stack: 'stack1',
-                data: data1,
-                yAxisID: 'A',
-                // fill: true,
-                xAxisID: 'X',
-                barThickness: '80',
-                color: 'red',
-                backgroundColor: 'red',
-                // backgroundColor: "rgba(75,192,192,0.2)",
-                borderColor: 'red',
-                borderWidth: 2,
-                datalabels: {
-                  display: true,
-                  align: "top",
-                  anchor: "end",
-                  formatter: (val, ctx) => {
-                    return val + "% (" + data1[ctx.dataIndex] + ')';
-                  },
-                  color: '#404040',
-                  // backgroundColor: '#404040'
-                },
-    
-              },
-              {
-                type: 'bar',
-                label: '3G',
-                data: data2,
-                stack: 'stack2',
-                color: '#1f77b4',
-                yAxisID: 'A',
-                fill: false,
-                xAxisID: 'X',
-                backgroundColor: 'blue',
-                borderColor: 'blue',
-                borderWidth: 2,
-                barThickness: '80',
-                datalabels: {
-                  display: true,
-                  align: "top",
-                  anchor: "end",
-                  formatter: (val, ctx) => {
-                    return val + "% (" + data2[ctx.dataIndex] + ')';
-                  },
-                  color: '#404040',
-                  // backgroundColor: '#404040'
-                },
-              },
-            //   {
-            //     type: 'bar',
-            //     label: '4G',
-            //     data: data4GPercentage,
-            //     stack: 'stack3',
-            //     color: '#1f77b4',
-            //     yAxisID: 'A',
-            //     fill: false,
-            //     xAxisID: 'X',
-            //     backgroundColor: 'green',
-            //     borderColor: 'green',
-            //     barThickness: '80',
-            //     borderWidth: 2,
-            //     datalabels: {
-            //       display: true,
-            //       align: "top",
-            //       anchor: "end",
-            //       formatter: (val, ctx) => {
-            //         return val + "% (" + data4G[ctx.dataIndex] + ')';
-            //       },
-            //       color: '#404040',
-            //       // backgroundColor: '#404040'
-            //     },
-            //   },
-              // {
-              //   type: 'bar',
-              //   label: '4G',
-              //   color: 'red',
-              //   stack: 'stack2',
-              //   data: data4,
-              //   yAxisID: 'A',
-              //   fill: false,
-              //   // backgroundColor: 'green',
-              //   borderColor: 'green',
-              //   borderWidth: 2,
-              //   datalabels: {
-              //     color: 'black',
-              //     font: 'bold',
-              //   align: 'top'6
-              //   }
-    
-              // },
-              // {
-              //   type: 'bar',
-              //   label: '2G',
-              //   stack: 'stack1',
-              //   data: firstCat,
-              //   yAxisID: 'A',
-              //   xAxisID: 'X',
-              //   fill: true,
-              //   barThickness : '200',
-              //   color: 'red',
-              //   backgroundColor: 'blue',
-              //   backgroundColor: "rgba(75,192,192,0.2)",
-              //   borderColor: 'blue',
-              //   borderWidth: 2,
-              //   datalabels: {
-              //     color: 'white',
-              //     font: 'bold',
-              //     align: "top",
-              //     backgroundColor: 'blue',
-              //     borderColor: 'rgb(54, 162, 235)',
-              //     borderWidth: 2
-              //   }
-    
-              // },
-              // {
-              //   type: 'bar',
-              //   label: '3G',
-              //   data: secondCat,
-              //   stack: 'stack1',
-              //   color: '#1f77b4',
-              //   yAxisID: 'A',
-              //   xAxisID: 'X',
-              //   fill: false,
-              //   barThickness : '200',
-              //   backgroundColor: 'red',
-              //   borderColor: 'red',
-              //   borderWidth: 2,
-              //   datalabels: {
-              //     color: 'white ',
-              //     font: 'bold',
-              //     backgroundColor: 'black',
-              //     align: "top",
-              //   }
-              // },
-              // {
-              //   type: 'bar',
-              //   label: '4G',
-              //   color: 'red',
-              //   stack: 'stack1',
-              //   data: thirdCat,
-              //   yAxisID: 'A',
-              //   xAxisID: 'X',
-              //   fill: false,
-              //   backgroundColor: 'green',
-              //   borderColor: 'green',
-              //   barThickness : '200',
-              //   borderWidth: 2,
-              //   datalabels: {
-              //     color: 'black',
-              //     font: 'bold',
-              //   align: 'top'
-              //   }
-    
-              // },
-              // {
-              //   label: "Cellules presentes en BDR ou RR uniquement",
-              //   yAxisID: 'B',
-              //   backgroundColor: "red",
-              //   data: firstCat,
-              //   stack: 2
-              // },
-              // {
-              //   label: "Cellules demontees, mais presentes en BDR ou RR",
-              //   yAxisID: 'B',
-              //   backgroundColor: "orange",
-              //   data: secondCat,
-              //   stack: 2
-              // },
-              // {
-              //   label: "Cellules normales",
-              //   yAxisID: 'B',
-              //   backgroundColor: "green",
-              //   data: thirdCat,
-              //   stack: 2
-              // }
-    
-            ],
-          },
-    
-        }
-    
-    
-        var mergedData = [
-          // ...data1,
-          // ...data2,
-          // ...dataSub4G,
-          // ... data2,
-          ...lineChartData.data.datasets
-        ]
-        // console.log(mergedData)
-        setRanData(mergedData)
-      }
-    
+
+    const apolloRefetchFunction = (newInputValue) => {
+        console.log(newInputValue)
+        setSelectedCase(newInputValue);
+        refetch;
+
+    }
+
+
 
     return (
         <div className='ransharing-container'>
@@ -557,16 +341,22 @@ export const Ransharing = () => {
                     </form>
                 </>
                 : null}
+            {/* <>
+                Select Case</>
+            <CaseFilter
+                refetchFunction={apolloRefetchFunction} /> */}
 
-            {ranData ? <Bar
-                data={{ labels: dateAxis, datasets: ranData }}
-                // data ={lineChartData}
-                options={lineChartData.options}
-                plugins={[ChartDataLabels]}
-                height={0}
-                width={250}
-            //  options={}
-            /> : null}
+         {allData && Object.keys(allData).map(item =>  
+             <RansharingCharts
+                data={allData[item]}
+                case={item} /> 
+         
+         )
+
+         }
+            {/* {allData ? <RansharingCharts
+                data={allData}
+                case={selectedCase} /> : null} */}
 
         </div>
 

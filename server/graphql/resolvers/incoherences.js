@@ -51,11 +51,14 @@ module.exports = {
       }
     },
     async getAllRansharing(root, args, context) {
+
       try{
+        console.log(args.selectedCase)
+
       let result = await db.Ransharing.findAll({
       //   // where: where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
       //   // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
-      //   // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
+        // where: {  caseName : args.selectedCase }
       //   limit: 15,
       //   order: [
       //     ['date', 'DESC'],

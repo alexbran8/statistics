@@ -64,7 +64,7 @@ extend type Mutation {
 
 extend type Query {
   getAll (first:Int!):[IncoherenceModel]
-  getAllRansharing:[GetAllRansahring]
+  getAllRansharing(selectedCase:String):[GetAllRansahring]
   getAllSubCat (first:Int!):[IncoherenceSubModel]
   refreshReporting(startDate:String! endDate:String!):[Etat]
 }
