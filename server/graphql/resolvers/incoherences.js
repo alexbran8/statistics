@@ -59,7 +59,7 @@ module.exports = {
       //   // where: where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
       //   // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
         // where: {  caseName : args.selectedCase }
-      //   limit: 15,
+        limit: 60,
       //   order: [
       //     ['date', 'DESC'],
       // ],

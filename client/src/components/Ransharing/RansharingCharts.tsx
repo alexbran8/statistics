@@ -28,7 +28,7 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
         datasets: [
           {
             type: 'bar',
-            label: props.case,
+            label: `${props.case} QOS KPI`,
             stack: 'stack1',
             data: data1,
             yAxisID: 'A',
@@ -53,7 +53,7 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
           },
           {
             type: 'bar',
-            label: props.case,
+            label: `${props.case} AUDIT OMC`,
             data: data2,
             stack: 'stack2',
             color: '#1f77b4',
@@ -245,7 +245,7 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
           // },
           title: {
             display: true,
-            text: 'Numero des cellules'
+            text: 'Nombre de cellules'
           },
         },  
       },
