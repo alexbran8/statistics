@@ -254,13 +254,13 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
     return (
         <> 
         {ranData ?
-        <Bar
+        <Bar className='grid-chart'
         data={{ labels: dateAxis, datasets: ranData }}
         // data ={lineChartData}
         options={lineChartData.options}
         plugins={[ChartDataLabels]}
         height={40}
-        width={250}
+        width={200}
     //  options={}
     /> : null}
         </>

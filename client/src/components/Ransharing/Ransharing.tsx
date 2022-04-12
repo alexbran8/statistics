@@ -67,12 +67,12 @@ export const Ransharing = () => {
     const [date, setDate] = useState()
     const [allData, setAllData] = useState()
 
-    var groupBy = function(xs, key) {
-        return xs.reduce(function(rv, x) {
-          (rv[x[key]] = rv[x[key]] || []).push(x);
-          return rv;
+    var groupBy = function (xs, key) {
+        return xs.reduce(function (rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
         }, {});
-      };
+    };
 
     const { data, loading, error, refetch } = useQuery(GET_ALL_RANSHARING, {
         variables: { first: 10 }, onCompleted: (
@@ -80,8 +80,8 @@ export const Ransharing = () => {
             console.log(data)
             // setAllData(data)
 
-           let grouppedDate = groupBy(data.getAllRansharing, "caseName")
-           setAllData(grouppedDate)
+            let grouppedDate = groupBy(data.getAllRansharing, "caseName")
+            setAllData(grouppedDate)
             // setRanData(data.getAllRansharing)
             // mergeData(data.getAllRansharing)
 
@@ -345,18 +345,17 @@ export const Ransharing = () => {
                 Select Case</>
             <CaseFilter
                 refetchFunction={apolloRefetchFunction} /> */}
+            <div class="grid">
+                {allData && Object.keys(allData).map(item =>
+                    <>
+                        <RansharingCharts
+                            data={allData[item]}
+                            case={item} />
+                    </>
+                )
 
-         {allData && Object.keys(allData).map(item =>  
-             <RansharingCharts
-                data={allData[item]}
-                case={item} /> 
-         
-         )
-
-         }
-            {/* {allData ? <RansharingCharts
-                data={allData}
-                case={selectedCase} /> : null} */}
+                }
+            </div>
 
         </div>
 
