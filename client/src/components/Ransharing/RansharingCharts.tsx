@@ -228,18 +228,18 @@ const mergeData = (data1, data2, percentage1, percentage2, data3GPercentage, dat
             text: 'Nombre de cellules'
           },
         },
-        B: {
-          type: 'linear',
-          position: 'right',
-          title: {
-            display: true,
-            text: '%'
-          },
-          ticks: {
-            // max: 1,
-            // min: 1000
-          }
-        }  
+        // B: {
+        //   type: 'linear',
+        //   position: 'right',
+        //   title: {
+        //     display: true,
+        //     text: '%'
+        //   },
+        //   ticks: {
+        //     // max: 1,
+        //     // min: 1000
+        //   }
+        // }  
       },
     }
   }
