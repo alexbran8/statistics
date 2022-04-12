@@ -28,6 +28,8 @@ const GET_ALL_RANSHARING = gql`
         diff2Cells
         caseName
         week
+        totalCells1
+        totalCells2
     }
   }
 `;
@@ -348,6 +350,7 @@ export const Ransharing = () => {
             <div class="grid">
                 {allData && Object.keys(allData).map(item =>
                     <>
+                     {/* <div className="row-border">{item}</div> */}
                         <RansharingCharts
                             data={allData[item]}
                             case={item} />

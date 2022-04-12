@@ -14,17 +14,21 @@
 
     .grid {
         display: grid;
-        grid-template-columns: 2fr 2fr;
+        grid-template-columns: 1fr 1fr ;
+        grid-gap: 5px;
+        padding-top: 100px;
         // grid-auto-rows: autpo;
         // grid-gap: 12.5em;
       }
 
       .grid > .grid-chart {
         // border: 2px solid black;
-        column-width: 200px;
+        column-width: 450px;
         max-width: 800px;
         margin: 0 auto;
       }
+
+
 .ransharing-table {
     // border: 2px solid red;
     margin: auto;

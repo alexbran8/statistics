@@ -12,15 +12,18 @@ export const RansharingCharts = (props) => {
 
 
 useEffect(()=> {
-    var BCMdata = props.data.map(function (x) { return x.diff1 })
-    var BYTSFRdata = props.data.map(function (x) { return x.diff2 })
-    mergeData(BCMdata, BYTSFRdata)
+    var data1Input = props.data.map(function (x) { return x.diff1 })
+    var data2Input = props.data.map(function (x) { return x.diff2 })
+    var percentage1 = props.data.map(function (x) { return (x.diff1/x.totalCells1)*100 })
+    var percentage2 = props.data.map(function (x) { return (x.diff2/x.totalCells2)*100 })
+
+    mergeData(data1Input, data2Input, percentage1, percentage2)
     var array = props.data.map(function (x) { return x.week })
     let unique = [...new Set(array)];
     setDateAxis(unique)
 },[props])
 
-const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, data4GPercentage, data2G, data3G, data4G) => {
+const mergeData = (data1, data2, percentage1, percentage2, data3GPercentage, data4GPercentage, data2G, data3G, data4G) => {
         
     const lineChartData = {
       data: {
@@ -32,20 +35,20 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
             stack: 'stack1',
             data: data1,
             yAxisID: 'A',
-            // fill: true,
+            fill: true,
             xAxisID: 'X',
-            barThickness: '80',
-            color: 'red',
-            backgroundColor: 'red',
+            barThickness: '40',
+            // color: 'rgba(0,156,204,255)',
+            // backgroundColor: 'rgba(234,91,15,255)',
             // backgroundColor: "rgba(75,192,19,0.2)",
-            borderColor: 'red',
+            borderColor: 'rgba(0,156,204,255)',
             borderWidth: 2,
             datalabels: {
               display: true,
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                return  data1[ctx.dataIndex] ;
+                return  data1[ctx.dataIndex] + "(" + percentage1[ctx.dataIndex].toFixed(1) + '%)'; ;
               },
               color: '#404040',
               // backgroundColor: '#404040'
@@ -60,45 +63,22 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
             yAxisID: 'A',
             fill: false,
             xAxisID: 'X',
-            backgroundColor: 'blue',
-            borderColor: 'blue',
+            // backgroundColor: 'blue',
+            borderColor: 'rgba(234,91,15,255)',
             borderWidth: 2,
-            barThickness: '80',
+            barThickness: '40',
             datalabels: {
               display: true,
               align: "top",
               anchor: "end",
               formatter: (val, ctx) => {
-                return data2[ctx.dataIndex] ;
+                return data2[ctx.dataIndex] + "(" + percentage2[ctx.dataIndex].toFixed(1) + '%)';
               },
               color: '#404040',
               // backgroundColor: '#404040'
             },
           },
-        //   {
-        //     type: 'bar',
-        //     label: '4G',
-        //     data: data4GPercentage,
-        //     stack: 'stack3',
-        //     color: '#1f77b4',
-        //     yAxisID: 'A',
-        //     fill: false,
-        //     xAxisID: 'X',
-        //     backgroundColor: 'green',
-        //     borderColor: 'green',
-        //     barThickness: '80',
-        //     borderWidth: 2,
-        //     datalabels: {
-        //       display: true,
-        //       align: "top",
-        //       anchor: "end",
-        //       formatter: (val, ctx) => {
-        //         return val + "% (" + data4G[ctx.dataIndex] + ')';
-        //       },
-        //       color: '#404040',
-        //       // backgroundColor: '#404040'
-        //     },
-        //   },
+       
           // {
           //   type: 'bar',
           //   label: '4G',
@@ -247,7 +227,19 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
             display: true,
             text: 'Nombre de cellules'
           },
-        },  
+        },
+        B: {
+          type: 'linear',
+          position: 'right',
+          title: {
+            display: true,
+            text: '%'
+          },
+          ticks: {
+            // max: 1,
+            // min: 1000
+          }
+        }  
       },
     }
   }
@@ -259,8 +251,8 @@ const mergeData = (data1, data2, dataSub4G, data2GPercentage, data3GPercentage, 
         // data ={lineChartData}
         options={lineChartData.options}
         plugins={[ChartDataLabels]}
-        height={40}
-        width={200}
+        height={30}
+        width={150}
     //  options={}
     /> : null}
         </>

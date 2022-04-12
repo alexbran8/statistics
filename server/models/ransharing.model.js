@@ -16,7 +16,7 @@ module.exports = (sequelize, type) => {
             required: true,
           },
         createdBy: {
-            type: type.INTEGER,
+            type: type.STRING,
             required: true,
           },
           diff1Cells: {
@@ -24,6 +24,14 @@ module.exports = (sequelize, type) => {
             required: true,
           },
           diff2Cells: {
+            type: type.STRING,
+            required: true,
+          },
+          totalCells1: {
+            type: type.STRING,
+            required: true,
+          },
+          totalCells2: {
             type: type.STRING,
             required: true,
           },

@@ -205,6 +205,7 @@ export const Header = () => {
         authenticated: false,
         error: "Failed to authenticate user"
       });
+      
     }
   }
     

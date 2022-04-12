@@ -42,6 +42,8 @@ input RansahringData {
     diff2Cells:String
     caseName: String!
     week:String!
+    totalCells1: Int
+    totalCells2: Int
   }
 
   type IncoherenceModel {
