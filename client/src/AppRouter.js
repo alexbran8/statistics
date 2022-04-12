@@ -27,9 +27,9 @@ export const AppRouter = (props) => {
       <Routes>
         <Route exact path={"/"} element={<Homepage />} />
         <Route exact path={"/error"} element={<LoginError />} />
-        <Route exact path={"/incoherence_reporting"} element={isAuthentificated ? <IncoherenceReporting /> : <Homepage />} />
-        <Route exact path={"/ransharing"} element={isAuthentificated ? <Ransharing /> : <Homepage />} />
-        <Route exact path={"/reporting"} element={isAuthentificated ? <Reporting /> : <Homepage />} />
+        <Route exact path={"/incoherence_reporting"} element={isAuthentificated ? <IncoherenceReporting /> : <Homepage /> } />
+        <Route exact path={"/ransharing"} element={isAuthentificated ? <Ransharing /> : <Homepage /> } />
+        <Route exact path={"/reporting"} element={isAuthentificated ? <Reporting /> : <Homepage /> } />
       </Routes>
     </HashRouter>
   );
