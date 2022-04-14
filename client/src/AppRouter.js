@@ -16,6 +16,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { config } from "./config"
 
 import { Home } from "react-feather";
+import { Traitment } from "./components/Traitment/Traitment";
 
 export const AppRouter = (props) => {
   const user = useSelector((state) => ({ auth: state.auth }));
@@ -30,6 +31,7 @@ export const AppRouter = (props) => {
         <Route exact path={"/incoherence_reporting"} element={isAuthentificated ? <IncoherenceReporting /> : <Homepage /> } />
         <Route exact path={"/ransharing"} element={isAuthentificated ? <Ransharing /> : <Homepage /> } />
         <Route exact path={"/reporting"} element={isAuthentificated ? <Reporting /> : <Homepage /> } />
+        <Route exact path={"/traitment"} element={isAuthentificated ? <Traitment /> : <Homepage /> } />
       </Routes>
     </HashRouter>
   );
