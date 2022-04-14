@@ -198,6 +198,7 @@ export const Header = () => {
         authenticated: true,
         user: responseJson.user
       });
+      
     }
     else 
     {
@@ -205,6 +206,10 @@ export const Header = () => {
         authenticated: false,
         error: "Failed to authenticate user"
       });
+      console.log('user not auth')
+      _handleNotAuthenticated();
+      dispatch({
+        type: AUTH_ERROR})
       
     }
   }
@@ -216,6 +221,7 @@ export const Header = () => {
           error: "Failed to authenticate user"
         });
         console.log(err);
+        console.log('user not auth')
         _handleLogoutClick();
       });
   }
@@ -264,6 +270,7 @@ export const Header = () => {
   };
   const _handleNotAuthenticated = () => {
     setState({ authenticated: false });
+    // history.pushState('/')
   };
   return (
     <div className={classes.root}>

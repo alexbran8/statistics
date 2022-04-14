@@ -27,7 +27,7 @@
         },
         {
             "label": "Server Build",
-            "type": "chrome",
+            "type": "process",
 },
      
         {
