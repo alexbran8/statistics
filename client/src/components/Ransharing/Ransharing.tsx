@@ -66,8 +66,8 @@ export const Ransharing = () => {
     const classes = useStyles();
     const [comparisonResults, setComparisonResults] = useState();
     const [status, setStatus] = useState < String > ('');
-    const [date, setDate] = useState()
-    const [allData, setAllData] = useState()
+    const [date, setDate] = useState();
+    const [allData, setAllData] = useState();
 
     var groupBy = function (xs, key) {
         return xs.reduce(function (rv, x) {
@@ -143,7 +143,6 @@ export const Ransharing = () => {
             case fileName.substring(0, 15).includes('ORF') && fileName.includes('csv') && fileName.includes('BYT'):
                 var result = 'ORF-BYT';
                 break;
-
             case fileName.substring(0, 15).includes('FRM') && fileName.includes('xml') && fileName.includes('BYT'):
                 var result = 'FRM-BYT';
                 break;
