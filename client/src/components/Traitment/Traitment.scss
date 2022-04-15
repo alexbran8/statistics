@@ -1,10 +1,26 @@
 .traitment-container {
+    margin-top: 100px;
     text-align: center;
-    border: 1px solid blue
+    // border: 1px solid blue
 }
 
+.traitment-container h1 {
+    display: grid;
+    color: gray;
+    opacity:0.1;
+    place-items: center;
+    font-size: 10rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    overflow: hidden;
+    // transform: rotate(-35deg);
+}
 .process-status-container {
-    border: 0.5px solid #3f51b5;
+    // border: 0.5px solid #3f51b5;
     border-radius: 5px;
     background-color: #3f51b5;
     padding: 0.5em;
