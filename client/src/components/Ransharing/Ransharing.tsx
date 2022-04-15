@@ -249,7 +249,7 @@ export const Ransharing = () => {
 
     return (
         <div className='ransharing-container'>
-            <h1>Ransharing Reporting</h1>
+            <div className='page-background'>Ransharing Reporting</div>
             <h5>{status}</h5>
             <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleZip}>
                 <Button variant="contained" color="primary" className='btn'>Click here to upload ZIP file</Button>

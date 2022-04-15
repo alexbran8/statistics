@@ -45,9 +45,9 @@ export const Traitment = () => {
         <>
 
             <div className="traitment-container">
-                <h1>
+                <div className='page-background'>
                     Traitment Reporting
-                </h1>
+                </div>
                 <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleZip}>
                     <Button variant="contained" color="primary" className='btn'>Click here to upload ZIP file</Button>
                 </ReactFileReader>
