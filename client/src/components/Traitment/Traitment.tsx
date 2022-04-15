@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import "./Traitment.scss"
 import ReactFileReader from 'react-file-reader';
 import Button from '@material-ui/core/Button'
-
+import JSZip from 'jszip';
 
 
 export const Traitment = () => {
