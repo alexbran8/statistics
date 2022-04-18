@@ -45,15 +45,28 @@ export const Traitment = () => {
         <>
 
             <div className="traitment-container">
-                <div className='page-background'>
+                <div unselectable="on" className='page-background'>
                     Traitment Reporting
                 </div>
                 <ReactFileReader multipleFiles={false} fileTypes={[".zip"]} handleFiles={handleZip}>
                     <Button variant="contained" color="primary" className='btn'>Click here to upload ZIP file</Button>
                 </ReactFileReader>
                 <>
-                    <div className="process-status-container">
-                        <div className="text"> {processStatus !== 0 ? (progress / processStatus * 100).toFixed(1) + '%' : 'waiting for files'}</div></div>
+
+                    <svg viewBox="0 0 36 36" className="circular-chart">
+                        {/* <div className="text"> {processStatus !== 0 ? (progress / processStatus * 100).toFixed(1) + '%' : 'waiting for files'}</div> */}
+                        <text x="50%" y="60%" text-anchor="middle"  className="text">{processStatus !== 0 ? (progress / processStatus * 100).toFixed(1) + '%' : 'waiting for files'}</text>
+
+                        <path class="circle"
+                            stroke-dasharray={`${progress / processStatus * 100}, ${100}`}
+                            d="M18 2.0945
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        {/* </div> */}
+                    </svg>
+
+
                     {files && files.length > 0 ? <>
                         <table className='ransharing-table'>
                             <thead>
