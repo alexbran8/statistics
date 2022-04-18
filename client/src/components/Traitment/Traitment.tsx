@@ -11,13 +11,15 @@ export const Traitment = () => {
     const [processStatus, setProcessStatus] = useState(24);
     const [progress, setProgress] = useState(0);
 
+    const saveToDb = () => {
+        console.log(files)
+    }
+
     const handleZip = (zipFile) => {
         const zip = new JSZip();
         zip.loadAsync(zipFile[0])
             .then(function (zip) {
-                var newResults = []
                 var newProgress = progress
-                // setProcessStatus(processStatus + Object.keys(zip.files).length)
                 Object.keys(zip.files).forEach((file, index) => {
                     zip.files[file].async('string').then(function (fileData) {
                         // check if file exists in object if not add them
@@ -25,11 +27,11 @@ export const Traitment = () => {
                             //if not add file to archive
                             var updatedResults = [];
                             let updatedFiles = []
-                            files.push({ fileName: file, content: fileData, status: 'read-from-client' })
-                            updatedFiles = [...files]
-                            newProgress++
-                            setProgress(newProgress)
-                            setFiles(updatedFiles)
+                            files.push({ fileName: file, content: fileData, status: 'read-from-client' });
+                            updatedFiles = [...files];
+                            newProgress++;
+                            setProgress(newProgress);
+                            setFiles(updatedFiles);
                         }
                     })
                 })
