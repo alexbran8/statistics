@@ -65,6 +65,13 @@ export const SidebarData = [
     // iconOpened: <RiIcons.RiArrowUpSFill />,
   },
   {
+    title: "Ransharing 4G",
+    path: "/ransharing_4g",
+    // icon: <IoIcons.IoIosPaper />,
+    // iconClosed: <RiIcons.RiArrowDownSFill />,
+    // iconOpened: <RiIcons.RiArrowUpSFill />,
+  },
+  {
     title: "Traitment",
     path: "/traitment",
     // icon: <IoIcons.IoIosPaper />,

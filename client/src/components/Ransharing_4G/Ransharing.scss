@@ -1,0 +1,47 @@
+.ransharing-container {
+    // border: 2px solid black;
+    text-align: center;
+    // display: flex;
+    // align-items: flex-start;
+
+    h1 {
+        text-align: center;
+    }
+    h5 {
+        padding-top: 50px;
+    }
+}
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr ;
+        grid-gap: 20px;
+        padding-top: 100px;
+        // grid-auto-rows: autpo;
+        // grid-gap: 12.5em;
+      }
+
+      .grid > .grid-chart {
+        // border: 2px solid black;
+        column-width: 450px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+
+.ransharing-table {
+    // border: 2px solid red;
+    margin: auto;
+    max-width: 80%;
+    
+    border-collapse: collapse;
+
+    thead {
+        border-bottom: 2px solid black
+    }
+    tr { border: none; }
+    td {
+        border-right: solid 1px black; 
+        border-left: solid 1px black;
+      }
+}
