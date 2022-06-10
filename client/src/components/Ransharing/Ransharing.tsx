@@ -79,10 +79,10 @@ export const Ransharing = () => {
     const { data, loading, error, refetch } = useQuery(GET_ALL_RANSHARING, {
         variables: { first: 10 }, onCompleted: (
         ) => {
-            console.log(data)
+            console.log(data.getAllRansharing)
             // setAllData(data)
-
-            let grouppedDate = groupBy(data.getAllRansharing, "caseName")
+            const sortedData = data.getAllRansharing.reverse()
+            let grouppedDate = groupBy(sortedData, "caseName")
             setAllData(grouppedDate)
             // setRanData(data.getAllRansharing)
             // mergeData(data.getAllRansharing)
