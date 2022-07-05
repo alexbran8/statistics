@@ -74,6 +74,30 @@ module.exports = {
         console.log(error)
       }
     },
+    async getAllRansharing4G(root, args, context) {
+
+      try{
+        console.log(args.selectedCase)
+
+      let result = await db.Ransharing.findAll({
+      //   // where: where(sequelize.fn('YEAR', sequelize.col('date')), '2021'),
+      //   // where: sequelize.where(sequelize.fn('YEAR', sequelize.col('date')), 2021),        
+        // where: {  caseName : args.selectedCase }
+        limit: 50,
+        order: [
+          ['creationDate', 'DESC'],
+      ],
+      });
+      
+      console.log(result)
+ 
+
+      return result;
+      }
+      catch (error) {
+        console.log(error)
+      }
+    },
     async getAllSubCat(root, args, context) {
       let result = await db.IncoherencesCat.findAll({
         // where: { [Op.and]: [dateFilter, weekFilter, itvFilter, statusFilter, siteFilter, responsibleFilter] },
@@ -213,7 +237,62 @@ module.exports = {
       const response = {message: error, success: false}
       return  response
     }
+  },
+  async saveRansharingData4G(root, data, context) {
+    try {
+  
+      let check = await db.Ransharing4G.findAll({
+        where: {
+        week: data.week
+        }
+      });
+  
+      if(check[0] === undefined) {
+  
+      let RansahringData = [];
+  
+              
+        for (var i=0; i<data.data.length; i++) {
+          const row = {
+            diff1: data.data[i].diff1,
+            diff2: data.data[i].diff2,
+            caseName: data.data[i].caseName,
+            diff1Cells: data.data[i].diff1Cells,
+            diff2Cells: data.data[i].diff2Cells,
+            week: data.week,
+            creationDate: Date.now(),
+            createdBy: context.user.username
+          }
+  
+          RansahringData.push(row)
+        }
+      
+  
+        db.Ransharing.bulkCreate(RansahringData)
+  
+  
+  
+        
+        const response = {message: 'Data has been successfully saved!', success: true}
+        return  response  
+      }
+      else
+      {
+        const response = {message: 'Data for this week already exists!', success: false}
+        return  response  
+      }
+        
+      }
+  
+             
+    catch (error) {
+      console.log(error)
+      const response = {message: error, success: false}
+      return  response
+    }
+  }
   }
 }
-}
+
+
 

@@ -19,9 +19,9 @@ import { useMutation, useQuery, gql } from "@apollo/client";
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const GET_ALL_RANSHARING = gql`
+const GET_ALL_RANSHARING_4G = gql`
   query ($selectedCase: String)  {
-    getAllRansharing (selectedCase:$selectedCase) {
+    getAllRansharing4G (selectedCase:$selectedCase) {
         diff1
         diff2
         diff1Cells
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SAVE_DATA = gql`
 mutation ($data: [RansahringData], $week: String!) {
-    saveRansharingData (data:$data, week:$week){
+    saveRansharingData4G (data:$data, week:$week){
         success
         message
       }
@@ -69,6 +69,9 @@ export const Ransharing4G = () => {
     const [date, setDate] = useState();
     const [allData, setAllData] = useState();
 
+    const [processStatus, setProcessStatus] = useState(18);
+    const [progress, setProgress] = useState(0);
+
     var groupBy = function (xs, key) {
         return xs.reduce(function (rv, x) {
             (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -76,7 +79,7 @@ export const Ransharing4G = () => {
         }, {});
     };
 
-    const { data, loading, error, refetch } = useQuery(GET_ALL_RANSHARING, {
+    const { data, loading, error, refetch } = useQuery(GET_ALL_RANSHARING_4G, {
         variables: { first: 10 }, onCompleted: (
         ) => {
             console.log(data)
@@ -171,6 +174,7 @@ export const Ransharing4G = () => {
                 let a = results.filter(x => x.fileType == 'XML')
                 let b = results.filter(x => x.fileType == 'CSV')
                 let comparisonResults = []
+                var newProgress = progress
                 a.forEach(item => {
 
                     let itemToCompareWith = b.find(x => x.caseName == item.caseName)
@@ -181,7 +185,8 @@ export const Ransharing4G = () => {
                     comparisonResults.push({ caseName: item.caseName, diff1Cells: JSON.stringify(diff1), diff1: diff1.length, diff2: diff2.length, diff2Cells: JSON.stringify(diff2) })
 
                     updatedComparisonResults = [...comparisonResults]
-
+                    newProgress++;
+                    setProgress(newProgress);
                     setComparisonResults(updatedComparisonResults)
                 }
                 )
@@ -200,6 +205,7 @@ export const Ransharing4G = () => {
         zip.loadAsync(zipFile[0])
             .then(function (zip) {
                 var newResults = []
+                var newProgress = progress
                 Object.keys(zip.files).forEach(file => {
                     zip.files[file].async('string').then(function (fileData) {
                         var updatedResults = [];
@@ -220,6 +226,8 @@ export const Ransharing4G = () => {
 
                         newResults.push({ fileName: file, caseName: caseName, fileType: fileType, content: fileContent2 })
                         updatedResults = [...newResults]
+                        newProgress++;
+                        setProgress(newProgress);
                         setResults(updatedResults)
                     })
                 })
@@ -255,7 +263,18 @@ export const Ransharing4G = () => {
                 <Button variant="contained" color="primary" className='btn'>Click here to upload ZIP file</Button>
             </ReactFileReader>
 
+            <svg viewBox="0 0 36 36" className="circular-chart">
+                        {/* <div className="text"> {processStatus !== 0 ? (progress / processStatus * 100).toFixed(1) + '%' : 'waiting for files'}</div> */}
+                        <text x="50%" y="60%" text-anchor="middle"  className="text">{processStatus !== 0 ? (progress / processStatus * 100).toFixed(1) + '%' : 'waiting for files'}</text>
 
+                        <path class="circle"
+                            stroke-dasharray={`${progress / processStatus * 100}, ${100}`}
+                            d="M18 2.0945
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        {/* </div> */}
+                    </svg>
 
             {results ?
                 <>
