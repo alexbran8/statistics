@@ -10,8 +10,8 @@ const baseLocation = process.env.NODE_ENV === `development` ? "" :  '';
 
 
 var config = {
-  CLIENT_HOME_PAGE_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#" :  'https://apps.gdceur.eecloud.dynamic.nsn-net.net/cdrbeta/#/',
-  CLIENT_ERROR_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/error" :  'https://apps.gdceur.eecloud.dynamic.nsn-net.net/cdrbeta/#/error',
+  CLIENT_HOME_PAGE_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/" :  `${process.env.HOST_URL}`,
+  CLIENT_ERROR_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/error" :  `${process.env.HOST_URL}/#/error`,
   azureApp: {
     // Azure Application details
     base: process.env.AAD_AUTH_URL || 'https://login.microsoftonline.com/',
