@@ -26,7 +26,7 @@ export const AppRouter = (props) => {
   return (
     <HashRouter  {...props} >
       <Header />
-      {window.location.href.includes('host')? <div className="dev-env">DEV ENV</div> :null}
+      {window.location.href.includes('dev')? <div className="dev-env">DEV ENV</div> :null}
       <Routes>
         <Route exact path={"/"} element={<Homepage />} />
         <Route exact path={"/error"} element={<LoginError />} />
