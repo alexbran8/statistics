@@ -27,7 +27,7 @@ export const AppRouter = (props) => {
     <HashRouter  {...props} >
       <Header />
       <Routes>
-      {window.location.href.includes('dev')? <div className="dev-env">DEV ENV</div> :null}
+      {/* {window.location.href.includes('dev')? <div className="dev-env">DEV ENV</div> :null} */}
         <Route exact path={"/"} element={<Homepage />} />
         <Route exact path={"/error"} element={<LoginError />} />
         <Route exact path={"/incoherence_reporting"} element={isAuthentificated ? <IncoherenceReporting /> : <Homepage />} />
