@@ -260,3 +260,10 @@ body {
   // position: absolute;
 }
 
+.dev-env{
+  position: fixed;
+  top: 50%; left: 0;
+  transform: translate(calc(50vw - 50%));
+  font-size: 5rem;
+  color: red;
+}
