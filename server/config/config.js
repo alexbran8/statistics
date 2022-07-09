@@ -14,9 +14,9 @@ var config = {
   CLIENT_ERROR_URL: process.env.NODE_ENV === `development` ? "http://localhost:3000/#/error" :  `${process.env.HOST_URL}/#/error`,
   azureApp: {
     // Azure Application details
-    base: process.env.AAD_AUTH_URL || 'https://login.microsoftonline.com/',
-    clientID: process.env.AAD_AUTH_CLIENTID || 'ae919e4c-3cba-44d7-80d6-f94ea0898d7d',
-    clientSecret: process.env.AAD_AUTH_CLIENTSECRET || '3468Q~asOKu2EViNzg-gIlcF6FZQ4JkLY9KEibUd',
+    base: process.env.AAD_AUTH_URL,
+    clientID: process.env.AAD_AUTH_CLIENTID,
+    clientSecret: process.env.AAD_AUTH_CLIENTSECRET,
     callbackUri: hostUrl + '/auth/cbAdfs',
     resource: process.env.MS_GRAPH_URL || 'https://graph.microsoft.com/',
     tenant: process.env.AAD_AUTH_TENANT || '5d471751-9675-428d-917b-70f44f9630b0'
