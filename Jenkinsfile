@@ -15,7 +15,7 @@ node {
             // slackSend color: "warning", message: "Started `${env.JOB_NAME}#${env.BUILD_NUMBER}`\n\n_The changes:_\n${lastChanges}"
             }
             dir('/apps/env'){
-                sh "cp .dashboard_env /apps/dashboard/.env"
+                sh "cp .cdrbeta_env /apps/cdrbeta/.env"
             }
 
         stage 'Test'
