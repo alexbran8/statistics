@@ -85,7 +85,7 @@ export const Ransharing4G = () => {
             console.log(data)
             // setAllData(data)
 
-            let grouppedDate = groupBy(data.getAllRansharing, "caseName")
+            let grouppedDate = groupBy(data.getAllRansharing4G, "caseName")
             setAllData(grouppedDate)
             // setRanData(data.getAllRansharing)
             // mergeData(data.getAllRansharing)
