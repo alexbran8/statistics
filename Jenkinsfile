@@ -6,7 +6,7 @@ node {
         stage 'Checkout'
 
             dir('/apps/cdrbeta'){
-            sh "pwd"
+                sh "pwd"
        
             checkout scm
 
@@ -14,7 +14,8 @@ node {
             def lastChanges = readFile('GIT_CHANGES')
             // slackSend color: "warning", message: "Started `${env.JOB_NAME}#${env.BUILD_NUMBER}`\n\n_The changes:_\n${lastChanges}"
                          }
-            sh "pwd"
+            dir('/apps/env'){
+                sh "cp .dashboard_env /apps/dashboard/.env"
 
         stage 'Test'
             sh 'echo "test implementation in progress"'
