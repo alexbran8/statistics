@@ -18,8 +18,8 @@ var config = {
     clientID: process.env.AAD_AUTH_CLIENTID,
     clientSecret: process.env.AAD_AUTH_CLIENTSECRET,
     callbackUri: hostUrl + '/auth/cbAdfs',
-    resource: process.env.MS_GRAPH_URL || 'https://graph.microsoft.com/',
-    tenant: process.env.AAD_AUTH_TENANT || '5d471751-9675-428d-917b-70f44f9630b0'
+    resource: process.env.MS_GRAPH_URL,
+    tenant: process.env.AAD_AUTH_TENANT
   },
   baseLocation: baseLocation,
   jwtSecret: process.env.APP_SESSION_SECRET || 'big Secret',
